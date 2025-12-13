@@ -962,16 +962,35 @@ a {
 
 .social__media {
   position: relative;
-  display: grid;
-  justify-items: center;
-  min-height: 800px; /* или 700px/900px */
+  min-height: 800px;
 }
-.tg{
+
+.social__iphone {
   position: absolute;
-  height: 100%;
-  width: 100%;
-  right: -400px;
-  transform: scale(0.8);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 550px;
+  height: auto;
+  max-width: 100%;
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s ease;
+}
+
+.social__iphone:hover {
+  transform: translate(-50%, -50%) translateY(-5px);
+}
+
+.social__iphone--secondary {
+  top: calc(50% + 20px);
+  left: calc(50% + 20px);
+  transform: translate(-50%, -50%);
+  z-index: 1;
+}
+
+.social__iphone--secondary:hover {
+  transform: translate(-50%, -50%) translateY(-5px);
 }
 
 @media (max-width: 1100px) {
@@ -980,14 +999,13 @@ a {
     gap: 26px;
   }
 
-  .social__media {
-    justify-items: flex-start;
+  .social__iphone {
+    width: 450px;
   }
 
-  .social__iphone {
-    right: 12px;
-    left: auto;
-    bottom: -28px;
+  .social__iphone--secondary {
+    top: calc(50% + 15px);
+    left: calc(50% + 15px);
   }
 }
 
@@ -1006,13 +1024,17 @@ a {
     align-items: flex-start;
   }
 
-  .social__screen {
-    width: 100%;
+  .social__media {
+    min-height: 600px;
   }
 
   .social__iphone {
-    width: 140px;
-    height: 280px;
+    width: 350px;
+  }
+
+  .social__iphone--secondary {
+    top: calc(50% + 10px);
+    left: calc(50% + 10px);
   }
 }
 
