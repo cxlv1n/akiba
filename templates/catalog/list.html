@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Каталог — AutoImport{% endblock %}
+
+{% block content %}
+<section class="popular" id="catalog">
+    <div class="container">
+        <h1 class="popular__title">Каталог автомобилей</h1>
+        <div class="popular__box">
+            <div class="popular__filters">
+                <div class="popular__filters-left">
+                    <button class="filter-pill" type="button">
+                        <span class="filter-pill__label">Марка</span>
+                        <span class="filter-pill__arrow"></span>
+                    </button>
+                    <button class="filter-pill" type="button">
+                        <span class="filter-pill__label">Модель</span>
+                        <span class="filter-pill__arrow"></span>
+                    </button>
+                    <div class="filter-pill filter-pill--range">
+                        <div class="filter-pill__range-item">
+                            <span class="filter-pill__label">Год от</span>
+                            <span class="filter-pill__arrow"></span>
+                        </div>
+                        <span class="filter-pill__divider"></span>
+                        <div class="filter-pill__range-item">
+                            <span class="filter-pill__label">До</span>
+                            <span class="filter-pill__arrow"></span>
+                        </div>
+                    </div>
+                </div>
+                {% if sample %}
+                    <span class="muted">Показаны примеры. Добавьте реальные авто через админку.</span>
+                {% else %}
+                    <span class="muted">Найдено: {{ cars|length }}</span>
+                {% endif %}
+            </div>
+
+            <div class="popular__cards">
+                {% for car in cars %}
+                    <article class="car-card">
+                        <div class="car-card__img-wrap">
+                            {% if car.image_url %}
+                                <img src="{{ car.image_url }}" alt="{{ car.name }}" class="car-card__img">
+                            {% else %}
+                                <img src="{% static 'images/placeholder-car.jpg' %}" alt="{{ car.name }}" class="car-card__img">
+                            {% endif %}
+                        </div>
+                        <div class="car-card__body">
+                            <p class="car-card__pub">Номер публикации #{{ forloop.counter|add:1000 }}</p>
+                            <h3 class="car-card__title">{{ car.manufacturer }} {{ car.model }}</h3>
+
+                            <div class="car-card__row">
+                                <div class="car-card__col">
+                                    <span class="car-card__label">Кузов</span>
+                                    <span class="car-card__value">{{ car.body_type|default:"-" }}</span>
+                                </div>
+                                <div class="car-card__col">
+                                    <span class="car-card__label">Год выпуска</span>
+                                    <span class="car-card__value">{{ car.year }}</span>
+                                </div>
+                            </div>
+
+                            <div class="car-card__row">
+                                <div class="car-card__col">
+                                    <span class="car-card__label">Пробег</span>
+                                    <span class="car-card__value">{{ car.mileage_km }} км</span>
+                                </div>
+                                <div class="car-card__col">
+                                    <span class="car-card__label">Объем двигателя</span>
+                                    <span class="car-card__value">{{ car.engine_volume|default:"-" }}</span>
+                                </div>
+                            </div>
+
+                            <div class="car-card__divider"></div>
+
+                            <div class="car-card__price-row">
+                                <div>
+                                    <span class="car-card__label">Стоимость:</span>
+                                    <p class="car-card__price">{{ car.price }} ₽</p>
+                                </div>
+
+                                <a class="btn car-card__btn" href="{% url 'catalog:list' %}">
+                                    Подробнее
+                                </a>
+                            </div>
+                    </article>
+                {% empty %}
+                    <p class="muted">Пока нет доступных позиций.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

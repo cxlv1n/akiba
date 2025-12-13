@@ -1,0 +1,85 @@
+{% load static %}
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}AutoImport{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <script type="module" src="https://unpkg.com/@splinetool/viewer@1.12.13/build/spline-viewer.js"></script>
+    
+</head>
+<body>
+<div id="page">
+    <header class="site-header">
+        <div class="site-header__bg" aria-hidden="true"></div>
+        <div class="container site-header__content">
+            <div class="site-header__top">
+                <a href="{% url 'pages:home' %}" class="logo" aria-label="Akiba Auto — на главную">
+                    <img src="{% static 'images/logo-akiba.png' %}" alt="Akiba Auto" class="logo__img">
+                </a>
+                <div class="header-phone-block">
+                    <a href="tel:+79000000000" class="header-phone">+7 (900) 000-00-00</a>
+                    <div class="header-phone__note">Звонок по РФ бесплатный</div>
+                </div>
+                <div class="site-header__top-right">
+                    <div class="site-header__socials" aria-label="Мы в соцсетях">
+                        <a href="https://t.me/akibaautovl" target="_blank" class="social-btn" aria-label="Telegram">
+                            <span class="social-btn__circle"></span>
+                        </a>
+                        <a href="https://www.instagram.com/akibaauto/" target="_blank" class="social-btn" aria-label="Instagram">
+                            <span class="social-btn__circle"></span>
+                        </a>
+                        <a href="https://www.youtube.com/channel/UC4PVZayQJqVTBPuBlxFliUw" target="_blank" class="social-btn" aria-label="YouTube">
+                            <span class="social-btn__circle"></span>
+                        </a>
+                        <a href="#" target="_blank" class="social-btn" aria-label="VK">
+                            <span class="social-btn__circle"></span>
+                        </a>
+                    </div>
+                    <a href="{% url 'catalog:list' %}" class="btn btn--calc">Рассчитать стоимость авто</a>
+                </div>
+                <button class="burger" aria-label="Открыть меню" aria-expanded="false" aria-controls="main-nav">
+                    <span></span><span></span><span></span>
+                </button>
+            </div>
+            <div class="site-header__divider"></div>
+            <nav class="site-header__nav" id="main-nav" aria-label="Основное меню">
+                <div class="site-header__nav-links">
+                    <a href="{% url 'pages:home' %}" class="nav-pill {% if request.resolver_match.url_name == 'home' %}nav-pill--active{% endif %}">Главная</a>
+                    <a href="{% url 'pages:about' %}" class="nav-pill {% if request.resolver_match.url_name == 'about' %}nav-pill--active{% endif %}">О компании</a>
+                    <a href="{% url 'pages:process' %}" class="nav-pill {% if request.resolver_match.url_name == 'process' %}nav-pill--active{% endif %}">Процесс покупки</a>
+                    <a href="{% url 'catalog:list' %}" class="nav-pill {% if request.resolver_match.url_name == 'list' %}nav-pill--active{% endif %}">Каталог</a>
+                    <a href="{% url 'pages:contacts' %}" class="nav-pill {% if request.resolver_match.url_name == 'contacts' %}nav-pill--active{% endif %}">Контакты</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <div class="page-offset" aria-hidden="true"></div>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="site-footer">
+        <div class="container site-footer__inner">
+            <span>© 2025 AutoImport</span>
+            <span>Автомобили из Японии, Кореи и Китая</span>
+        </div>
+    </footer>
+</div>
+
+<script>
+  const burger = document.querySelector('.burger');
+  const nav = document.getElementById('main-nav');
+  const toggleNav = () => {
+    const opened = nav.classList.toggle('nav--open');
+    burger.setAttribute('aria-expanded', opened ? 'true' : 'false');
+  };
+  if (burger && nav) {
+    burger.addEventListener('click', toggleNav);
+  }
+</script>
+</body>
+</html>

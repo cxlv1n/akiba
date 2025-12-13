@@ -1,0 +1,288 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Главная — AutoImport{% endblock %}
+
+{% block content %}
+
+<section class="hero" aria-labelledby="hero-title">
+    <div class="hero__bg" aria-hidden="true"></div>
+    <div class="container hero__content">
+        <div class="hero__left">
+            <h1 class="hero__title" id="hero-title">
+                Автомобили из Японии, Южной Кореи и Китая за 21 день
+            </h1>
+            <p class="hero__subtitle">
+                Бесплатный просчёт, доставка и растаможка под ключ в любой город России.
+            </p>
+
+            <ul class="hero__benefits">
+                <li class="hero__benefit hero__benefit--calc">
+                    <span class="hero__benefit-icon"></span>
+                    <span class="hero__benefit-text">
+                        <strong>Бесплатный просчёт</strong> автомобиля по вашим параметрам
+                    </span>
+                </li>
+                <li class="hero__benefit hero__benefit--delivery">
+                    <span class="hero__benefit-icon"></span>
+                    <span class="hero__benefit-text">
+                        <strong>Поставка под ключ</strong> с логистикой и таможней
+                    </span>
+                </li>
+                <li class="hero__benefit hero__benefit--profit">
+                    <span class="hero__benefit-icon"></span>
+                    <span class="hero__benefit-text">
+                        <strong>Экономия до 20&nbsp;%</strong> по сравнению с рынком
+                    </span>
+                </li>
+            </ul>
+
+            <div class="hero__actions">
+                <a href="{% url 'catalog:list' %}" class="btn btn--hero">Подобрать автомобиль</a>
+                <a href="{% url 'pages:process' %}" class="btn btn--ghost">Как мы работаем</a>
+            </div>
+        </div>
+
+        <div class="hero__right" aria-hidden="true">
+            <div class="hero__car-wrapper">
+                <img src="{% static 'images/1.png' %}"
+                     alt="Чёрный внедорожник на тёмном фоне"
+                     class="hero__car">
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section class="popular" id="popular">
+    <div class="container">
+        <h2 class="popular__title">Популярные модели</h2>
+        <div class="popular__box">
+            <div class="popular__filters">
+                <div class="popular__filters-left">
+                    <button class="filter-pill" type="button">
+                        <span class="filter-pill__label">Марка</span>
+                        <span class="filter-pill__arrow"></span>
+                    </button>
+                    <button class="filter-pill" type="button">
+                        <span class="filter-pill__label">Модель</span>
+                        <span class="filter-pill__arrow"></span>
+                    </button>
+                    <div class="filter-pill filter-pill--range">
+                        <div class="filter-pill__range-item">
+                            <span class="filter-pill__label">Год от</span>
+                            <span class="filter-pill__arrow"></span>
+                        </div>
+                        <span class="filter-pill__divider"></span>
+                        <div class="filter-pill__range-item">
+                            <span class="filter-pill__label">До</span>
+                            <span class="filter-pill__arrow"></span>
+                        </div>
+                    </div>
+                </div>
+                <a class="btn btn--calc popular__show-btn" href="{% url 'catalog:list' %}">Показать</a>
+            </div>
+            <div class="popular__cards">
+                {% for car in cars %}
+                    <article class="car-card">
+                        <div class="car-card__img-wrap">
+                            {% if car.image_url %}
+                                <img src="{{ car.image_url }}" alt="{{ car.name }}" class="car-card__img">
+                            {% else %}
+                                <img src="{% static 'images/placeholder-car.jpg' %}" alt="{{ car.name }}" class="car-card__img">
+                            {% endif %}
+                        </div>
+                        <div class="car-card__body">
+                            <p class="car-card__pub">Номер публикации #{{ forloop.counter|add:1000 }}</p>
+                            <h3 class="car-card__title">{{ car.manufacturer }} {{ car.model }}</h3>
+
+                            <div class="car-card__row">
+                                <div class="car-card__col">
+                                    <span class="car-card__label">Кузов</span>
+                                    <span class="car-card__value">{{ car.body_type|default:"-" }}</span>
+                                </div>
+                                <div class="car-card__col">
+                                    <span class="car-card__label">Год выпуска</span>
+                                    <span class="car-card__value">{{ car.year }}</span>
+                                </div>
+                            </div>
+
+                            <div class="car-card__row">
+                                <div class="car-card__col">
+                                    <span class="car-card__label">Пробег</span>
+                                    <span class="car-card__value">{{ car.mileage_km }} км</span>
+                                </div>
+                                <div class="car-card__col">
+                                    <span class="car-card__label">Объем двигателя</span>
+                                    <span class="car-card__value">{{ car.engine_volume|default:"-" }}</span>
+                                </div>
+                            </div>
+
+                            <div class="car-card__divider"></div>
+
+                            <div class="car-card__price-row">
+                                <div>
+                                    <span class="car-card__label">Стоимость:</span>
+                                    <p class="car-card__price">{{ car.price }} ₽</p>
+                                </div>
+
+                                <a class="btn car-card__btn" href="{% url 'catalog:list' %}">
+                                    Подробнее
+                                </a>
+                            </div>
+                    </article>
+                {% empty %}
+                    <p class="muted">Пока нет доступных позиций.</p>
+                {% endfor %}
+            </div>
+            <a href="{% url 'catalog:list' %}" class="popular__catalog-btn">Перейти в каталог</a>
+        </div>
+    </div>
+</section>
+
+    <section class="benefits" id="benefits">
+        <div class="container">
+            <div class="benefits__header">
+                <h2 class="benefits__title">
+                    Преимущества покупки автомобиля через компанию Akiba Auto
+                </h2>
+            </div>
+
+            <!-- Изображение автомобиля -->
+            <div class="benefits__car-photo">
+                <img
+                    src="{% static 'images/Luxury-BMW-Car-Front-View-PNG.png' %}"
+                    alt="BMW M4 F82 - спортивный автомобиль"
+                    class="benefits__car-img"
+                >
+            </div>
+
+            <!-- Сетка преимуществ -->
+            <div class="benefits__grid">
+                <article class="benefit-card benefit-card--primary">
+                    <div class="benefit-card__icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+                            <path d="M12 2L15.09 8.26L22 9L17 14L18.18 21L12 17.77L5.82 21L7 14L2 9L8.91 8.26L12 2Z" fill="currentColor"/>
+                        </svg>
+                    </div>
+                    <div class="benefit-card__value">до 30%</div>
+                    <p class="benefit-card__text">Экономии на покупке автомобиля</p>
+                </article>
+
+                <article class="benefit-card benefit-card--secondary">
+                    <div class="benefit-card__icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+                            <path d="M12 2L13.09 5.26L17 4L15.82 8L18 12L13.09 10.74L12 14L10.91 10.74L6 12L8.18 8L7 4L10.91 5.26L12 2Z" fill="currentColor"/>
+                            <circle cx="12" cy="12" r="3" fill="currentColor"/>
+                        </svg>
+                    </div>
+                    <div class="benefit-card__value">21 день</div>
+                    <p class="benefit-card__text">Среднее время доставки автомобиля</p>
+                </article>
+
+                <article class="benefit-card benefit-card--secondary">
+                    <div class="benefit-card__icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+                            <path d="M9 12L11 14L15 10M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <div class="benefit-card__value">100%</div>
+                    <p class="benefit-card__text">Сопровождение сделки от начала до конца</p>
+                </article>
+
+                <article class="benefit-card benefit-card--secondary">
+                    <div class="benefit-card__icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+                            <path d="M3 7V5C3 3.89543 3.89543 3 5 3H19C20.1046 3 21 3.89543 21 5V7M3 7V19C3 20.1046 3.89543 21 5 21H19C20.1046 21 21 20.1046 21 19V7M3 7H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <div class="benefit-card__value">24/7</div>
+                    <p class="benefit-card__text">Поддержка и консультации в любое время</p>
+                </article>
+
+                <article class="benefit-card benefit-card--primary">
+                    <div class="benefit-card__icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+                            <path d="M17 20H7M17 20V16M17 20H21M7 20V16M7 20H3M21 12V16H3V12M12 4V8M8 8H16M12 8V12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <div class="benefit-card__value">4+ года</div>
+                    <p class="benefit-card__text">Надежного опыта на автомобильном рынке</p>
+                </article>
+
+                <article class="benefit-card benefit-card--secondary">
+                    <div class="benefit-card__icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+                            <path d="M12 4.354C12.732 3.523 13.805 3 15 3C17.209 3 19 4.791 19 7C19 8.28 18.36 9.421 17.393 10.144C16.427 10.867 15.25 11 14.5 11C14.102 11 13.717 11.059 13.353 11.17M12 4.354C11.268 3.523 10.195 3 9 3C6.791 3 5 4.791 5 7C5 8.28 5.64 9.421 6.607 10.144C7.573 10.867 8.75 11 9.5 11C9.898 11 10.283 11.059 10.647 11.17M12 4.354V21M12 21H9M12 21H15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <div class="benefit-card__value">1 150+</div>
+                    <p class="benefit-card__text">Довольных клиентов по всему СНГ</p>
+                </article>
+            </div>
+        </div>
+    </section>
+
+<section class="about" id="about">
+    <div class="container about__inner">
+        <div class="about__content">
+            <p class="eyebrow">О компании</p>
+            <h2 class="about__title">О нашей компании</h2>
+            <p class="about__text">
+                Покупаем автомобили с аукционов Японии и внутренних рынков Южной Кореи и Китая. Более 5 лет работаем как надежный партнер: выгодные условия, прозрачность и полный сервис под ключ.
+            </p>
+            <ul class="about__list">
+                <li>5+ лет опыта — быстро находим лучшие предложения на международных рынках</li>
+                <li>Индивидуальный сервис: прозрачность сделок и понимание запросов</li>
+                <li>Качество и ответственность: оформление и доставка под ключ</li>
+                <li>Защита бренда: зарегистрированный товарный знак и честные процессы</li>
+                <li>Ценности: долгосрочное сотрудничество, поддержка и безопасность клиента</li>
+            </ul>
+            <div class="about__actions">
+                <a class="btn btn--calc" href="{% url 'pages:about' %}">Подробнее о компании</a>
+            </div>
+        </div>
+
+        <div class="about__certificate" aria-hidden="true">
+            <div class="about__card">
+
+                <img src="{% static 'images/sertificat.png' %}" alt="Сертификат Akiba Auto" class="about__img">
+                
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="social" id="social">
+    
+    <div class="container social__inner">
+        <spline-viewer class="tg" url="https://prod.spline.design/ZSGlgqynEf1eAKJm/scene.splinecode"></spline-viewer>
+        <div class="social__content">
+            
+            <p class="eyebrow">Социальные сети</p>
+            <h2 class="social__title">Больше информации и обзоров в наших соцсетях</h2>
+            <p class="social__text">
+                Следите за нами в Telegram и YouTube, чтобы не пропустить свежие видео, подборки авто и реальные кейсы клиентов.
+            </p>
+            <div class="social__stats">
+                <span class="social__chip">20K+ просмотров в месяц</span>
+                <span class="social__chip">Еженедельные обзоры</span>
+                <span class="social__chip">Разборы поставок</span>
+            </div>
+            <div class="social__actions">
+                <a class="btn btn--calc social__btn" href="https://t.me/akibaautovl" target="_blank" rel="noopener">
+                    <span class="social__icon social__icon--tg" aria-hidden="true"></span>
+                    Telegram
+                </a>
+                <a class="btn btn--ghost social__btn" href="https://www.youtube.com/channel/UC4PVZayQJqVTBPuBlxFliUw" target="_blank" rel="noopener">
+                    <span class="social__icon social__icon--yt" aria-hidden="true"></span>
+                    YouTube
+                </a>
+            </div>
+        </div>
+
+        
+    </div>
+    
+</section>
+{% endblock %}
