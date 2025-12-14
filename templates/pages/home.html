@@ -332,14 +332,16 @@
                             <p class="review-card__text">{{ review.text }}</p>
                         </div>
                     </article>
+                    
                 {% endfor %}
+                <div class="reviews__footer">
+                    <a href="https://www.vl.ru/akibaauto#comments" target="_blank" rel="noopener" class="btn btn--ghost reviews__link">
+                        Читать все отзывы на VL.ru
+                    </a>
+                </div>
             </div>
             
-            <div class="reviews__footer">
-                <a href="https://www.vl.ru/akibaauto#comments" target="_blank" rel="noopener" class="btn btn--ghost reviews__link">
-                    Читать все отзывы на VL.ru
-                </a>
-            </div>
+            
         {% else %}
             <div class="reviews__empty">
                 <p>Отзывы временно недоступны</p>

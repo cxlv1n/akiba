@@ -429,7 +429,7 @@ a {
 /* ================== ПОПУЛЯРНЫЕ МОДЕЛИ (refined) ================== */
 
 .popular {
-  padding: 84px 0 96px;
+  padding: 84px 0 10px;
   background: #131313;
   position: relative;
   overflow: hidden;
@@ -748,7 +748,7 @@ a {
 }
 
 .about {
-  padding: 88px 0 96px;
+  padding: 88px 0 10px;
   background: #131313;
   position: relative;
   overflow: hidden;
@@ -1068,7 +1068,7 @@ a {
 /* ================== ПРЕИМУЩЕСТВА ================== */
 
 .benefits {
-  padding: 100px 0 120px;
+  padding: 100px 0 10px;
   background: #131313;
   position: relative;
   overflow: hidden;
@@ -1293,7 +1293,7 @@ a {
 /* ================== ОТЗЫВЫ ================== */
 
 .reviews {
-  padding: 120px 0;
+  padding: 10px 0 10px;
   background: #131313;
   position: relative;
   overflow: hidden;
