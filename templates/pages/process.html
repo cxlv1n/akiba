@@ -1,31 +1,96 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}Процесс покупки — AutoImport{% endblock %}
 
 {% block content %}
-<section class="page-header">
-    <h1>Как мы работаем</h1>
-    <p>Понятная схема от подбора до выдачи автомобиля.</p>
+
+<section class="process-page">
+    <div class="container">
+        <!-- Заголовок страницы -->
+        <div class="process-page__header">
+            <p class="eyebrow">Процесс покупки</p>
+            <h1 class="process-page__title">Как происходит покупка автомобиля</h1>
+            <p class="process-page__subtitle">Мы сопровождаем вас на каждом этапе от подбора до получения автомобиля</p>
+        </div>
+
+        <!-- Шаги процесса -->
+        <div class="process-page__steps">
+            <div class="process-step">
+                <div class="process-step__number">1</div>
+                <div class="process-step__content">
+                    <h3 class="process-step__title">Определение требований к автомобилю и рамок бюджета</h3>
+                    <p class="process-step__text">Мы подробно обсуждаем ваши пожелания к автомобилю, предпочтения по марке, модели, году выпуска, техническому состоянию и определяем максимально комфортный для вас бюджет.</p>
+                </div>
+            </div>
+
+            <div class="process-step">
+                <div class="process-step__number">2</div>
+                <div class="process-step__content">
+                    <h3 class="process-step__title">Заключение договора с указанием конечной стоимости автомобиля</h3>
+                    <p class="process-step__text">Подписываем официальный договор, где фиксируется полная стоимость автомобиля с учетом всех расходов и комиссий. Никаких скрытых платежей.</p>
+                </div>
+            </div>
+
+            <div class="process-step">
+                <div class="process-step__number">3</div>
+                <div class="process-step__content">
+                    <h3 class="process-step__title">Ежедневная отправка вариантов авто; Ставка на желанный автомобиль</h3>
+                    <p class="process-step__text">Мы ежедневно присылаем вам подходящие варианты автомобилей с подробными характеристиками, фотографиями и ценами. Как только находим идеальный вариант - делаем ставку на аукционе.</p>
+                </div>
+            </div>
+
+            <div class="process-step">
+                <div class="process-step__number">4</div>
+                <div class="process-step__content">
+                    <h3 class="process-step__title">Оплата клиентом инвойса* (Япония, Китай), оплата в корею через наш офис</h3>
+                    <p class="process-step__text">*Инвойс – это международный счет, который содержит описание предмета сделки и ее сумму. Оплата производится после подтверждения выигрыша автомобиля на аукционе.</p>
+                </div>
+            </div>
+
+            <div class="process-step">
+                <div class="process-step__number">5</div>
+                <div class="process-step__content">
+                    <h3 class="process-step__title">Транспортировка авто в порт; Подробная фотоопись авто; Доставка авто на судне</h3>
+                    <p class="process-step__text">Организуем доставку автомобиля в порт, проводим детальную фотофиксацию состояния автомобиля и загружаем его на судно для морской перевозки в Россию.</p>
+                </div>
+            </div>
+
+            <div class="process-step">
+                <div class="process-step__number">6</div>
+                <div class="process-step__content">
+                    <h3 class="process-step__title">Процесс таможенного оформления</h3>
+                    <p class="process-step__text">Проходим все этапы таможенного оформления, включая декларацию, оплату пошлин и получение необходимых документов для ввоза автомобиля в Россию.</p>
+                </div>
+            </div>
+
+            <div class="process-step">
+                <div class="process-step__number">7</div>
+                <div class="process-step__content">
+                    <h3 class="process-step__title">Передача автомобиля клиенту</h3>
+                    <p class="process-step__text">Автомобиль готов к передаче! Мы помогаем с постановкой на учет, регистрацией и всеми необходимыми документами. Вы получаете автомобиль с полным пакетом документов.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Кнопки действий -->
+        <div class="process-page__actions">
+            <a href="#consultation" class="btn btn--primary">
+                <svg class="btn__icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 15C21 15.5304 20.7893 16.0391 20.4142 16.4142C20.0391 16.7893 19.5304 17 19 17H7L3 21V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H19C19.5304 3 20.0391 3.21071 20.4142 3.58579C20.7893 3.96086 21 4.46957 21 5V15Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Получить консультацию
+            </a>
+            <a href="{% static 'docs/contract.pdf' %}" class="btn btn--secondary" download>
+                <svg class="btn__icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 10V16M9 13L12 16L15 13M3 17V7C3 5.89543 3.89543 5 5 5H11L13 7H19C20.1046 7 21 7.89543 21 9V17C21 18.1046 20.1046 19 19 19H5C3.89543 19 3 18.1046 3 17Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Скачать договор
+            </a>
+        </div>
+    </div>
 </section>
 
-<ol class="steps">
-    <li>
-        <h3>Консультация и подбор</h3>
-        <p>Фиксируем бюджет и требования. Предлагаем варианты с рынков Китая, Японии и Кореи.</p>
-    </li>
-    <li>
-        <h3>Проверка и выкуп</h3>
-        <p>Аукционные листы, диагностика, торг. Оплата поставщику только после подтверждения состояния.</p>
-    </li>
-    <li>
-        <h3>Логистика и таможня</h3>
-        <p>Организуем доставку морем/жд, страхование, растаможку и СБКТС.</p>
-    </li>
-    <li>
-        <h3>Выдача и постановка</h3>
-        <p>Готовим авто к выдаче, помогаем с регистрацией и дополнительными опциями.</p>
-    </li>
-</ol>
 {% endblock %}
 
 
