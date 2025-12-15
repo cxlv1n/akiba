@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load humanize %}
 
 {% block title %}{{ car.manufacturer }} {{ car.model }} — AutoImport{% endblock %}
 
@@ -39,7 +40,7 @@
             </div>
 
             <div class="car-hero__price-block">
-                <div class="car-hero__price">{{ car.price }} ₽</div>
+                <div class="car-hero__price">{{ car.price|floatformat:0|intcomma }} ₽</div>
                 <div class="car-hero__actions">
                     <a href="tel:+79000000000" class="btn btn--calc car-hero__btn">ОСТАВИТЬ ЗАЯВКУ</a>
                 </div>
@@ -47,72 +48,373 @@
         </div>
 
         <div class="car-hero__right" aria-hidden="true">
-            <div class="car-hero__car-wrapper">
-                {% if car.image_url %}
-                    <img src="{{ car.image_url }}" alt="{{ car.name }}" class="car-hero__car">
-                {% else %}
-                    <img src="{% static 'images/placeholder-car.jpg' %}" alt="{{ car.name }}" class="car-hero__car">
-                {% endif %}
+            <!-- Главное фото -->
+            <div class="car-hero__gallery">
+                <div class="car-hero__main-photo">
+                    {% if car.get_all_images %}
+                        {% for image in car.get_all_images %}
+                            {% if image.is_main %}
+                                <div class="car-hero__main-photo-item" data-image="{{ image.image.url }}" data-alt="{{ image.alt_text|default:car.name }}">
+                                    <img src="{{ image.image.url }}" alt="{{ image.alt_text|default:car.name }}" class="car-hero__main-photo-img">
+                                    <div class="car-hero__zoom-icon">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                            <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2"/>
+                                            <path d="m21 21-4.35-4.35" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                            <circle cx="11" cy="11" r="3" stroke="currentColor" stroke-width="2"/>
+                                        </svg>
+                                    </div>
+
+                                    <!-- Стрелки навигации -->
+                                    {% if car.get_all_images %}
+                                        <button class="car-hero__photo-nav car-hero__photo-nav--prev" type="button" aria-label="Предыдущее фото">
+                                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                                <path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                            </svg>
+                                        </button>
+                                        <button class="car-hero__photo-nav car-hero__photo-nav--next" type="button" aria-label="Следующее фото">
+                                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                                <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                            </svg>
+                                        </button>
+                                    {% endif %}
+
+                                    <!-- Индикатор фото -->
+                                    {% if car.get_all_images %}
+                                        <div class="car-hero__photo-indicator">
+                                            <span class="car-hero__photo-current">1</span>
+                                            <span class="car-hero__photo-separator">/</span>
+                                            <span class="car-hero__photo-total">{{ car.get_all_images|length }}</span>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        <div class="car-hero__main-photo-item" data-image="{% static 'images/placeholder-car.jpg' %}" data-alt="{{ car.name }}">
+                            <img src="{% static 'images/placeholder-car.jpg' %}" alt="{{ car.name }}" class="car-hero__main-photo-img">
+                            <div class="car-hero__zoom-icon">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                    <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2"/>
+                                    <path d="m21 21-4.35-4.35" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                    <circle cx="11" cy="11" r="3" stroke="currentColor" stroke-width="2"/>
+                                </svg>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Миниатюры -->
+                <div class="car-hero__thumbnails-container">
+                    <div class="car-hero__thumbnails-header">
+                        <h3 class="car-hero__thumbnails-title">Все фотографии</h3>
+                        <span class="car-hero__thumbnails-count">
+                            {% if car.get_all_images %}
+                                {{ car.get_all_images|length }} фото
+                            {% else %}
+                                1 фото
+                            {% endif %}
+                        </span>
+                    </div>
+                    <div class="car-hero__thumbnails-wrapper">
+                        <div class="car-hero__thumbnails">
+                            {% if car.get_all_images %}
+                                {% for image in car.get_all_images %}
+                                    <div class="car-hero__thumbnail-item {% if image.is_main %}car-hero__thumbnail-item--active{% endif %}" data-image="{{ image.image.url }}" data-alt="{{ image.alt_text|default:car.name }}">
+                                        <img src="{{ image.image.url }}" alt="{{ image.alt_text|default:car.name }}" class="car-hero__thumbnail-img">
+                                        
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Навигационные стрелки -->
+                    {% if car.get_all_images|length > 4 %}
+                        <button class="car-hero__nav-btn car-hero__nav-btn--prev" type="button">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                <path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                        <button class="car-hero__nav-btn car-hero__nav-btn--next" type="button">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                    {% endif %}
+                </div>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Секция контактов -->
-<section class="contacts-section" id="contacts">
+<!-- Популярные модели -->
+{% if popular_cars %}
+<section class="popular-models-section">
     <div class="container">
-        <div class="contacts-section__inner">
-            <h2 class="contacts-section__title">Готовы оформить заказ?</h2>
-            <p class="contacts-section__subtitle">Свяжитесь с нашим менеджером для получения консультации</p>
+        <div class="popular-models__inner">
+            <h2 class="popular-models__title">Популярные модели</h2>
+            <p class="popular-models__subtitle">Самые востребованные автомобили в нашем каталоге</p>
 
-            <div class="contacts-section__content">
-                <div class="contacts-section__info">
-                    <div class="contacts-section__item">
-                        <div class="contacts-section__icon">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                        </div>
-                        <div class="contacts-section__content">
-                            <span class="contacts-section__label">Телефон</span>
-                            <a href="tel:88006009239" class="contacts-section__value">8-800-600-9239</a>
+            <div class="popular-models__grid">
+                {% for popular_car in popular_cars %}
+                <div class="popular-model-card">
+                    <div class="popular-model-card__image">
+                        {% if popular_car.get_image_url %}
+                            <img src="{{ popular_car.get_image_url }}" alt="{{ popular_car.manufacturer }} {{ popular_car.model }}" loading="lazy">
+                        {% else %}
+                            <img src="{% static 'images/placeholder-car.jpg' %}" alt="{{ popular_car.manufacturer }} {{ popular_car.model }}" loading="lazy">
+                        {% endif %}
+                        <div class="popular-model-card__overlay">
+                            <a href="{% url 'catalog:detail' popular_car.id %}" class="popular-model-card__link">Посмотреть</a>
                         </div>
                     </div>
-
-                    <div class="contacts-section__item">
-                        <div class="contacts-section__icon">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                <polyline points="22,6 12,13 2,6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                        </div>
-                        <div class="contacts-section__content">
-                            <span class="contacts-section__label">E-mail</span>
-                            <a href="mailto:akibaauto@gmail.com" class="contacts-section__value">akibaauto@gmail.com</a>
-                        </div>
-                    </div>
-
-                    <div class="contacts-section__item">
-                        <div class="contacts-section__icon">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
-                                <polyline points="12,6 12,12 16,14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                        </div>
-                        <div class="contacts-section__content">
-                            <span class="contacts-section__label">Режим работы</span>
-                            <span class="contacts-section__value">10:00 - 19:00, пн - сб</span>
+                    <div class="popular-model-card__content">
+                        <h3 class="popular-model-card__name">{{ popular_car.manufacturer }} {{ popular_car.model }}</h3>
+                        <div class="popular-model-card__price">от {{ popular_car.price|floatformat:0|intcomma }} ₽</div>
+                        <div class="popular-model-card__specs">
+                            <span class="spec-item">{{ popular_car.year }} г.</span>
+                            {% if popular_car.body_type %}
+                                <span class="spec-item">{{ popular_car.body_type }}</span>
+                            {% endif %}
+                            {% if popular_car.engine_volume %}
+                                <span class="spec-item">{{ popular_car.engine_volume }}</span>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
-
-                <div class="contacts-section__actions">
-                    <a href="tel:+79000000000" class="btn btn--calc">Позвонить сейчас</a>
-                    <a href="{% url 'pages:contacts' %}" class="btn btn--ghost">Все контакты</a>
+                {% empty %}
+                <div class="popular-models__empty">
+                    <p>Популярные модели скоро появятся в каталоге</p>
                 </div>
+                {% endfor %}
+            </div>
+
+            <div class="popular-models__actions">
+                <a href="{% url 'catalog:list' %}" class="btn btn--primary">Посмотреть все модели</a>
             </div>
         </div>
     </div>
 </section>
+{% endif %}
+
+
+<!-- Модальное окно для просмотра фото -->
+<div class="photo-modal" id="photoModal">
+    <div class="photo-modal__overlay" id="photoModalOverlay"></div>
+    <div class="photo-modal__content">
+        <button class="photo-modal__close" id="photoModalClose">&times;</button>
+        <img class="photo-modal__image" id="photoModalImage" src="" alt="">
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Gallery script loaded');
+    const modal = document.getElementById('photoModal');
+    const modalImage = document.getElementById('photoModalImage');
+    const modalClose = document.getElementById('photoModalClose');
+    const modalOverlay = document.getElementById('photoModalOverlay');
+
+    // Функция открытия модального окна
+    function openModal(imageSrc, imageAlt) {
+        modalImage.src = imageSrc;
+        modalImage.alt = imageAlt;
+        modal.classList.add('photo-modal--open');
+        document.body.style.overflow = 'hidden';
+    }
+
+    // Функция закрытия модального окна
+    function closeModal() {
+        modal.classList.remove('photo-modal--open');
+        document.body.style.overflow = '';
+    }
+
+    // Обработчики для главного фото
+    const mainPhotoItems = document.querySelectorAll('.car-hero__main-photo-item');
+    mainPhotoItems.forEach(item => {
+        item.addEventListener('click', function() {
+            const imageSrc = this.dataset.image;
+            const imageAlt = this.dataset.alt;
+            openModal(imageSrc, imageAlt);
+        });
+    });
+
+
+    // Закрытие модального окна
+    if (modalClose) {
+        modalClose.addEventListener('click', closeModal);
+    }
+    if (modalOverlay) {
+        modalOverlay.addEventListener('click', closeModal);
+    }
+
+    // Закрытие по клавише Escape
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape' && modal.classList.contains('photo-modal--open')) {
+            closeModal();
+        }
+    });
+
+    // Навигация по фото - объявляем переменные в начале
+    const mainPhotoImg = document.querySelector('.car-hero__main-photo-img');
+    const mainPhotoItem = document.querySelector('.car-hero__main-photo-item');
+    const thumbnailItems = document.querySelectorAll('.car-hero__thumbnail-item');
+    const photoPrevBtn = document.querySelector('.car-hero__photo-nav--prev');
+    const photoNextBtn = document.querySelector('.car-hero__photo-nav--next');
+    const photoCurrent = document.querySelector('.car-hero__photo-current');
+
+    // Создаем массив изображений
+    const images = Array.from(thumbnailItems).map(item => ({
+        src: item.dataset.image,
+        alt: item.dataset.alt,
+        element: item
+    }));
+
+    let currentPhotoIndex = 0;
+
+    // Функция для обновления активного фото
+    function updateMainPhoto(index) {
+        console.log('Updating main photo to index:', index);
+        if (!images[index] || !mainPhotoImg || !mainPhotoItem) {
+            console.log('Missing required elements');
+            return;
+        }
+
+        currentPhotoIndex = index;
+
+        // Обновляем главное фото
+        mainPhotoImg.style.opacity = '0.7';
+        mainPhotoImg.style.transform = 'scale(0.98)';
+
+        setTimeout(() => {
+            mainPhotoImg.src = images[index].src;
+            mainPhotoImg.alt = images[index].alt;
+            mainPhotoItem.dataset.image = images[index].src;
+            mainPhotoItem.dataset.alt = images[index].alt;
+
+            mainPhotoImg.style.opacity = '1';
+            mainPhotoImg.style.transform = 'scale(1)';
+        }, 100);
+
+        // Обновляем активную миниатюру
+        thumbnailItems.forEach((thumb, i) => {
+            thumb.classList.toggle('car-hero__thumbnail-item--active', i === index);
+        });
+
+        // Обновляем индикатор
+        if (photoCurrent) {
+            photoCurrent.textContent = index + 1;
+        }
+
+        // Прокручиваем миниатюры к активной
+        const activeThumbnail = thumbnailItems[index];
+        if (activeThumbnail) {
+            activeThumbnail.scrollIntoView({
+                behavior: 'smooth',
+                block: 'nearest',
+                inline: 'center'
+            });
+        }
+    }
+
+    // Обработчики для стрелок фото
+    if (photoPrevBtn && photoNextBtn) {
+        console.log('Navigation buttons found:', photoPrevBtn, photoNextBtn);
+
+        photoPrevBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('Previous button clicked');
+            const newIndex = currentPhotoIndex > 0 ? currentPhotoIndex - 1 : images.length - 1;
+            updateMainPhoto(newIndex);
+        });
+
+        photoNextBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('Next button clicked');
+            const newIndex = currentPhotoIndex < images.length - 1 ? currentPhotoIndex + 1 : 0;
+            updateMainPhoto(newIndex);
+        });
+    } else {
+        console.log('Navigation buttons not found');
+    }
+
+    // Навигация клавиатурой
+    document.addEventListener('keydown', function(event) {
+        if (modal.classList.contains('photo-modal--open')) return; // Не работать в модальном окне
+
+        if (event.key === 'ArrowLeft') {
+            event.preventDefault();
+            console.log('Arrow left pressed');
+            const newIndex = currentPhotoIndex > 0 ? currentPhotoIndex - 1 : images.length - 1;
+            updateMainPhoto(newIndex);
+        } else if (event.key === 'ArrowRight') {
+            event.preventDefault();
+            console.log('Arrow right pressed');
+            const newIndex = currentPhotoIndex < images.length - 1 ? currentPhotoIndex + 1 : 0;
+            updateMainPhoto(newIndex);
+        }
+    });
+
+    // Навигация по миниатюрам (обновлено)
+    thumbnailItems.forEach((item, index) => {
+        item.addEventListener('click', function() {
+            console.log('Thumbnail clicked:', index);
+            updateMainPhoto(index);
+        });
+    });
+
+    // Навигация по миниатюрам (стрелки прокрутки)
+    const thumbnailsContainer = document.querySelector('.car-hero__thumbnails');
+    const prevBtn = document.querySelector('.car-hero__nav-btn--prev');
+    const nextBtn = document.querySelector('.car-hero__nav-btn--next');
+
+    if (prevBtn && nextBtn && thumbnailsContainer) {
+        const scrollAmount = 120; // ширина одного thumbnail + gap
+
+        prevBtn.addEventListener('click', function() {
+            thumbnailsContainer.scrollBy({
+                left: -scrollAmount,
+                behavior: 'smooth'
+            });
+        });
+
+        nextBtn.addEventListener('click', function() {
+            thumbnailsContainer.scrollBy({
+                left: scrollAmount,
+                behavior: 'smooth'
+            });
+        });
+
+        // Показывать/скрывать кнопки навигации в зависимости от прокрутки
+        function updateNavButtons() {
+            const { scrollLeft, scrollWidth, clientWidth } = thumbnailsContainer;
+            const isAtStart = scrollLeft <= 0;
+            const isAtEnd = scrollLeft >= scrollWidth - clientWidth - 1;
+
+            prevBtn.style.opacity = isAtStart ? '0.5' : '1';
+            prevBtn.style.pointerEvents = isAtStart ? 'none' : 'auto';
+            nextBtn.style.opacity = isAtEnd ? '0.5' : '1';
+            nextBtn.style.pointerEvents = isAtEnd ? 'none' : 'auto';
+        }
+
+        thumbnailsContainer.addEventListener('scroll', updateNavButtons);
+        updateNavButtons(); // Инициализация
+    }
+
+    // Инициализация - находим индекс активного фото
+    const activeThumbnail = document.querySelector('.car-hero__thumbnail-item--active');
+    if (activeThumbnail) {
+        const activeIndex = Array.from(thumbnailItems).indexOf(activeThumbnail);
+        if (activeIndex !== -1) {
+            currentPhotoIndex = activeIndex;
+            if (photoCurrent) {
+                photoCurrent.textContent = currentPhotoIndex + 1;
+            }
+        }
+    }
+});
+</script>
 
 {% endblock %}

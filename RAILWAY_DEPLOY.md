@@ -1,0 +1,178 @@
+# Развертывание Django проекта на Railway
+
+## Подготовка проекта
+
+Проект уже подготовлен для развертывания на Railway с следующими изменениями:
+- Создан `railway.toml` с конфигурацией
+- Добавлен `runtime.txt` с версией Python 3.11
+- Добавлен `python-dotenv` для загрузки переменных окружения
+- Настройки Django поддерживают переменные окружения
+
+## Шаги развертывания на Railway
+
+### 1. Регистрация и установка Railway CLI
+1. Зарегистрируйтесь на [Railway](https://railway.app)
+2. Установите Railway CLI:
+   ```bash
+   npm install -g @railway/cli
+   # или
+   curl -fsSL https://railway.app/install.sh | sh
+   ```
+
+### 2. Подготовка репозитория
+1. Создайте новый репозиторий на GitHub/GitLab
+2. Загрузите ваш проект в репозиторий:
+   ```bash
+   git init
+   git add .
+   git commit -m "Initial commit"
+   git remote add origin https://github.com/your-username/your-repo.git
+   git push -u origin main
+   ```
+
+### 3. Создание проекта на Railway
+1. Войдите в аккаунт Railway:
+   ```bash
+   railway login
+   ```
+
+2. Создайте новый проект:
+   ```bash
+   railway init
+   ```
+   Или через веб-интерфейс: нажмите "New Project" → "Deploy from GitHub"
+
+3. Подключите ваш репозиторий к Railway
+
+### 4. Настройка переменных окружения
+В разделе "Variables" вашего проекта на Railway добавьте:
+
+```
+DJANGO_SECRET_KEY=ваш_секретный_ключ_здесь_генерируйте_новый
+DJANGO_DEBUG=False
+DJANGO_ALLOWED_HOSTS=*
+```
+
+### 5. Настройка базы данных (опционально)
+Railway предоставляет managed базы данных. Если нужно:
+
+1. Добавьте базу данных: "Add Plugin" → PostgreSQL или MySQL
+2. Railway автоматически добавит переменные окружения для подключения
+3. Обновите `settings.py` для использования внешней базы данных
+
+### 6. Деплой
+Railway автоматически развернет проект при пуше в main ветку.
+
+### 7. Миграции базы данных
+После первого деплоя выполните миграции:
+```bash
+railway run python manage.py migrate
+```
+
+Или добавьте в railway.toml в секцию [deploy]:
+```
+startCommand = "python manage.py migrate && python manage.py collectstatic --noinput && gunicorn auto_site.wsgi:application --bind 0.0.0.0:$PORT"
+```
+
+### 8. Сбор статических файлов
+Railway автоматически выполнит `collectstatic` при деплое благодаря WhiteNoise.
+
+## Структура файлов для Railway
+
+```
+your-project/
+├── auto_site/
+│   ├── settings.py
+│   └── wsgi.py
+├── manage.py
+├── requirements.txt
+├── railway.toml
+├── runtime.txt
+├── .env.example
+└── ...
+```
+
+## Конфигурационные файлы
+
+### railway.toml
+```toml
+[build]
+builder = "Nixpacks"
+
+[deploy]
+startCommand = "python manage.py migrate && python manage.py collectstatic --noinput && gunicorn auto_site.wsgi:application --bind 0.0.0.0:$PORT"
+
+[environments]
+[environments.production]
+DJANGO_DEBUG = "False"
+DJANGO_SECRET_KEY = "your-secret-key-here-change-this"
+DJANGO_ALLOWED_HOSTS = "*"
+```
+
+### runtime.txt
+```
+python-3.11
+```
+
+## Переменные окружения
+
+| Переменная | Описание | Пример |
+|------------|----------|--------|
+| `DJANGO_SECRET_KEY` | Секретный ключ Django | `your-secret-key-here` |
+| `DJANGO_DEBUG` | Режим отладки | `False` |
+| `DJANGO_ALLOWED_HOSTS` | Разрешенные хосты | `*` или `your-app.railway.app` |
+
+## Бесплатный тариф Railway
+
+- **$5 кредитов в месяц** - достаточно для небольшого проекта
+- **Автоматическое масштабирование**
+- **Встроенный мониторинг**
+- **Custom домены** (платно)
+
+## Troubleshooting
+
+### Проблемы с деплоем
+- Проверьте логи в разделе "Deployments"
+- Убедитесь, что все зависимости указаны в `requirements.txt`
+- Проверьте переменные окружения
+
+### База данных
+- Railway автоматически предоставляет переменные окружения для подключения
+- Используйте их в `settings.py` для `DATABASES`
+
+### Статические файлы
+- WhiteNoise автоматически настроен
+- Статические файлы собираются автоматически
+
+## Управление проектом
+
+### Railway CLI команды
+```bash
+railway login          # Авторизация
+railway init          # Создание проекта
+railway up            # Деплой
+railway logs          # Просмотр логов
+railway run <command> # Выполнение команды в окружении Railway
+```
+
+### Через веб-интерфейс
+- Dashboard для управления сервисами
+- Variables для переменных окружения
+- Deployments для истории деплоев
+- Metrics для мониторинга
+
+## Следующие шаги
+
+1. **Домены**: Добавьте custom домен в разделе "Settings"
+2. **SSL**: Railway предоставляет автоматический HTTPS
+3. **Бэкапы**: Настройте регулярные бэкапы базы данных
+4. **Мониторинг**: Используйте встроенные метрики
+
+## Стоимость
+
+- **Free**: $5 кредитов/месяц
+- **Hobby**: $5/месяц
+- **Pro**: $10/месяц
+- **Team**: От $20/месяц
+
+Бесплатного тарифа достаточно для тестирования и небольших проектов!
