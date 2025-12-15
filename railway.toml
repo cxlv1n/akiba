@@ -4,9 +4,6 @@ builder = "Nixpacks"
 [deploy]
 startCommand = "./start.sh"
 
-[build]
-builder = "Nixpacks"
-
 [healthcheck]
 path = "/"
 
