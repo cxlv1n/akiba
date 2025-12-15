@@ -1,6 +1,6 @@
 from decimal import Decimal
 
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 
 from .models import Car
 
@@ -84,5 +84,17 @@ def car_list(request):
         {
             "cars": cars,
             "sample": sample,
+        },
+    )
+
+
+def car_detail(request, car_id):
+    """Отображение детальной информации об автомобиле."""
+    car = get_object_or_404(Car, id=car_id)
+    return render(
+        request,
+        "catalog/detail.html",
+        {
+            "car": car,
         },
     )

@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ car.manufacturer }} {{ car.model }} — AutoImport{% endblock %}
+
+{% block content %}
+
+<!-- Hero секция с автомобилем -->
+<section class="car-hero" aria-labelledby="car-hero-title">
+    <div class="car-hero__bg" aria-hidden="true"></div>
+    <div class="container car-hero__content">
+        <div class="car-hero__left">
+            <nav class="breadcrumb">
+                <a href="{% url 'pages:home' %}" class="breadcrumb__link">Главная</a>
+                <span class="breadcrumb__separator">/</span>
+                <a href="{% url 'catalog:list' %}" class="breadcrumb__link">Каталог</a>
+                <span class="breadcrumb__separator">/</span>
+                <span class="breadcrumb__current">{{ car.manufacturer }} {{ car.model }}</span>
+            </nav>
+
+            <h1 class="car-hero__title" id="car-hero-title">
+                {{ car.manufacturer }} {{ car.model }}
+                <span class="car-hero__year">{{ car.year }} года</span>
+            </h1>
+
+            <div class="car-hero__specs">
+                <div class="car-hero__spec">
+                    <span class="car-hero__spec-text">{{ car.body_type|default:"—" }}</span>
+                </div>
+                <div class="car-hero__spec">
+                    <span class="car-hero__spec-text">{{ car.engine_volume|default:"—" }}</span>
+                </div>
+                <div class="car-hero__spec">
+                    <span class="car-hero__spec-text">{{ car.mileage_km }} км</span>
+                </div>
+                <div class="car-hero__spec">
+                    <span class="car-hero__spec-text">{{ car.fuel|default:"—" }}</span>
+                </div>
+            </div>
+
+            <div class="car-hero__price-block">
+                <div class="car-hero__price">{{ car.price }} ₽</div>
+                <div class="car-hero__actions">
+                    <a href="tel:+79000000000" class="btn btn--calc car-hero__btn">ОСТАВИТЬ ЗАЯВКУ</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="car-hero__right" aria-hidden="true">
+            <div class="car-hero__car-wrapper">
+                {% if car.image_url %}
+                    <img src="{{ car.image_url }}" alt="{{ car.name }}" class="car-hero__car">
+                {% else %}
+                    <img src="{% static 'images/placeholder-car.jpg' %}" alt="{{ car.name }}" class="car-hero__car">
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Секция контактов -->
+<section class="contacts-section" id="contacts">
+    <div class="container">
+        <div class="contacts-section__inner">
+            <h2 class="contacts-section__title">Готовы оформить заказ?</h2>
+            <p class="contacts-section__subtitle">Свяжитесь с нашим менеджером для получения консультации</p>
+
+            <div class="contacts-section__content">
+                <div class="contacts-section__info">
+                    <div class="contacts-section__item">
+                        <div class="contacts-section__icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <div class="contacts-section__content">
+                            <span class="contacts-section__label">Телефон</span>
+                            <a href="tel:88006009239" class="contacts-section__value">8-800-600-9239</a>
+                        </div>
+                    </div>
+
+                    <div class="contacts-section__item">
+                        <div class="contacts-section__icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <polyline points="22,6 12,13 2,6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <div class="contacts-section__content">
+                            <span class="contacts-section__label">E-mail</span>
+                            <a href="mailto:akibaauto@gmail.com" class="contacts-section__value">akibaauto@gmail.com</a>
+                        </div>
+                    </div>
+
+                    <div class="contacts-section__item">
+                        <div class="contacts-section__icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                                <polyline points="12,6 12,12 16,14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <div class="contacts-section__content">
+                            <span class="contacts-section__label">Режим работы</span>
+                            <span class="contacts-section__value">10:00 - 19:00, пн - сб</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="contacts-section__actions">
+                    <a href="tel:+79000000000" class="btn btn--calc">Позвонить сейчас</a>
+                    <a href="{% url 'pages:contacts' %}" class="btn btn--ghost">Все контакты</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
