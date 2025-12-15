@@ -48,17 +48,53 @@
 В разделе "Variables" вашего проекта на Railway добавьте:
 
 ```
-DJANGO_SECRET_KEY=ваш_секретный_ключ_здесь_генерируйте_новый
+DJANGO_SECRET_KEY=n927VpqWKABY1KEji_VkipcKVNPJ_tFDClmaD28j2fxkqkPlcGQ1yA1xasN2eDlF3Vg
 DJANGO_DEBUG=False
 DJANGO_ALLOWED_HOSTS=*
 ```
 
-### 5. Настройка базы данных (опционально)
-Railway предоставляет managed базы данных. Если нужно:
+**ВНИМАНИЕ:** Сгенерируйте свой собственный SECRET_KEY! Используйте команду:
+```bash
+python -c "import secrets; print(secrets.token_urlsafe(50))"
+```
 
-1. Добавьте базу данных: "Add Plugin" → PostgreSQL или MySQL
-2. Railway автоматически добавит переменные окружения для подключения
-3. Обновите `settings.py` для использования внешней базы данных
+### 5. Проверка деплоя и логов
+После настройки переменных окружения Railway автоматически начнет деплой. Чтобы проверить статус:
+
+1. Перейдите в раздел "Deployments" вашего проекта
+2. Посмотрите логи деплоя (кнопка "View Logs")
+3. Если есть ошибки, они будут показаны в логах
+
+**Распространенные проблемы:**
+- Отсутствие переменной `DJANGO_SECRET_KEY`
+- Неправильный формат переменных окружения
+- Ошибки в зависимостях (Pillow, etc.)
+
+### 7. Настройка базы данных
+Railway предоставляет managed базы данных. По умолчанию Railway может использовать PostgreSQL.
+
+**Если нужно добавить базу данных:**
+1. В разделе "Plugins" добавьте PostgreSQL
+2. Railway автоматически создаст переменные окружения:
+   - `DATABASE_URL` - полный URL подключения к БД
+   - `PGHOST`, `PGPORT`, `PGDATABASE`, `PGUSER`, `PGPASSWORD`
+
+**Для использования PostgreSQL обновите settings.py:**
+```python
+import dj_database_url
+
+DATABASES = {
+    'default': dj_database_url.config(
+        default=os.environ.get('DATABASE_URL', f'sqlite:///{BASE_DIR}/db.sqlite3')
+    )
+}
+```
+
+**И добавьте в requirements.txt:**
+```
+dj-database-url>=2.0.0
+psycopg2-binary>=2.9.0
+```
 
 ### 6. Деплой
 Railway автоматически развернет проект при пуше в main ветку.
