@@ -185,6 +185,90 @@ a {
     border-color: #ec1d25;
 }
 
+/* ================== МОБИЛЬНАЯ АДАПТИВНОСТЬ ================== */
+
+/* Мобильное меню */
+.site-header__nav.nav--open {
+    max-height: 400px;
+    opacity: 1;
+}
+
+.site-header__nav.nav--closed {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+}
+
+/* Адаптивность для шапки */
+@media (max-width: 768px) {
+    .site-header__content {
+        padding: 12px 0 8px;
+    }
+
+    .site-header__top {
+        gap: 16px;
+    }
+
+    .site-header__top-right {
+        display: none;
+    }
+
+    .header-phone-block {
+        display: none;
+    }
+
+    .burger {
+        display: flex;
+    }
+
+    .site-header__nav {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: rgba(11, 12, 15, 0.95);
+        backdrop-filter: blur(18px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+        z-index: -1;
+        max-height: 0;
+        opacity: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease, opacity 0.3s ease;
+    }
+
+    .site-header__nav-links {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
+        padding: 16px 0;
+    }
+
+    .nav-pill {
+        justify-content: center;
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        margin: 0 16px;
+        min-width: auto;
+    }
+
+    .nav-pill:last-child {
+        border-bottom: none;
+    }
+
+    .nav-pill:hover,
+    .nav-pill--active {
+        border-color: #ec1d25;
+        background: rgba(236, 29, 37, 0.1);
+    }
+
+    .logo__img {
+        width: 120px;
+    }
+}
+
 .site-header__cta {
     display: flex;
     align-items: center;
@@ -421,6 +505,98 @@ a {
     opacity: 0.9;
     pointer-events: none;
     z-index: -1; /* важно: всегда под машиной */
+}
+
+/* Мобильная адаптивность для hero секции */
+@media (max-width: 1024px) {
+    .hero {
+        min-height: 700px;
+    }
+
+    .hero__content {
+        gap: 32px;
+    }
+
+    .hero__title {
+        font-size: 38px;
+        line-height: 42px;
+    }
+
+    .hero__car-wrapper {
+        width: min(600px, 60vw);
+    }
+}
+
+@media (max-width: 768px) {
+    .hero {
+        min-height: auto;
+        padding: 120px 0 80px;
+    }
+
+    .hero__content {
+        flex-direction: column;
+        text-align: center;
+        gap: 40px;
+    }
+
+    .hero__left {
+        max-width: none;
+        padding-top: 0;
+    }
+
+    .hero__title {
+        font-size: 32px;
+        line-height: 36px;
+        margin-bottom: 16px;
+    }
+
+    .hero__subtitle {
+        font-size: 16px;
+        line-height: 24px;
+    }
+
+    .hero__btn {
+        margin-top: 24px;
+    }
+
+    .hero__right {
+        justify-content: center;
+    }
+
+    .hero__car-wrapper {
+        width: min(400px, 80vw);
+        margin-right: 0;
+    }
+
+    .hero__car-wrapper::after {
+        height: 200px;
+        bottom: 100px;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero {
+        padding: 100px 0 60px;
+    }
+
+    .hero__title {
+        font-size: 28px;
+        line-height: 32px;
+    }
+
+    .hero__subtitle {
+        font-size: 15px;
+        line-height: 22px;
+    }
+
+    .hero__car-wrapper {
+        width: min(300px, 85vw);
+    }
+
+    .hero__car-wrapper::after {
+        height: 150px;
+        bottom: 80px;
+    }
 }
 
 /* ================== ПОПУЛЯРНЫЕ МОДЕЛИ ================== */
@@ -2088,6 +2264,16 @@ a {
     width: 38px;
     height: 38px;
   }
+
+  .site-footer__copyright {
+    font-size: 11px;
+    line-height: 1.3;
+  }
+
+  .btn--footer {
+    padding: 10px 16px;
+    font-size: 14px;
+  }
 }
 
 /* ================== СТРАНИЦА О КОМПАНИИ ================== */
@@ -2942,5 +3128,725 @@ a {
 
   .management-card__name {
     font-size: 18px;
+  }
+}
+
+/* Hero секция автомобиля */
+.car-hero {
+  position: relative;
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  background: linear-gradient(135deg, #0b0c0f 0%, #1a1d23 100%);
+  overflow: hidden;
+}
+
+.car-hero__bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 30% 40%, rgba(236, 29, 37, 0.1) 0%, transparent 50%),
+              radial-gradient(circle at 70% 60%, rgba(236, 29, 37, 0.05) 0%, transparent 50%);
+  z-index: 1;
+}
+
+.car-hero__content {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+  min-height: 80vh;
+}
+
+.car-hero__left {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.car-hero__title {
+  font-size: 48px;
+  font-weight: 700;
+  line-height: 1.1;
+  color: #ffffff;
+  margin: 0;
+}
+
+.car-hero__year {
+  display: block;
+  font-size: 24px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.8);
+  margin-top: 8px;
+}
+
+.car-hero__specs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.car-hero__spec {
+  padding: 8px 16px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  backdrop-filter: blur(10px);
+  text-align: center;
+  transition: all 0.3s ease;
+  cursor: default;
+  position: relative;
+  overflow: hidden;
+}
+
+.car-hero__spec::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #ec1d25, #ff4757);
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+.car-hero__spec:hover::before {
+  transform: scaleX(1);
+}
+
+.car-hero__spec:hover {
+  transform: translateY(-8px);
+  box-shadow:
+    0 20px 40px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.car-hero__spec-text {
+  font-size: 14px;
+  color: #ffffff;
+  font-weight: 500;
+}
+
+.car-hero__price-block {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.car-hero__price {
+  font-size: 48px;
+  font-weight: 700;
+  color: #ec1d25;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.car-hero__actions {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.car-hero__btn {
+  min-width: 180px;
+}
+
+.car-hero__right {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.car-hero__car-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 500px;
+  aspect-ratio: 16/10;
+}
+
+.car-hero__car {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 16px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+/* Детальная страница автомобиля */
+.car-detail {
+  padding: 70px 0 80px;
+  background: #0b0c0f;
+}
+
+.breadcrumb {
+  margin-bottom: 32px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: rgba(245, 245, 245, 0.62);
+}
+
+.breadcrumb__link {
+  color: rgba(245, 245, 245, 0.62);
+  text-decoration: none;
+  transition: color 0.18s ease;
+}
+
+.breadcrumb__link:hover {
+  color: #ec1d25;
+}
+
+.breadcrumb__separator {
+  color: rgba(245, 245, 245, 0.40);
+}
+
+.breadcrumb__current {
+  color: #ffffff;
+}
+
+.car-detail__main-title {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.car-detail__main-title .car-detail__title {
+  margin: 0;
+}
+
+.car-detail__content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  align-items: start;
+}
+
+.car-detail__gallery {
+  position: sticky;
+  top: 40px;
+}
+
+.car-detail__img-wrap {
+  border-radius: 12px;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.25);
+  aspect-ratio: 16/10;
+}
+
+.car-detail__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.car-detail__info {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.car-detail__title {
+  margin: 0 0 16px;
+  font-size: 32px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 0.01em;
+  line-height: 1.2;
+  background: linear-gradient(135deg, #ffffff 0%, rgba(255, 255, 255, 0.8) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Блок стоимости */
+.car-detail__price-block {
+  margin-top: 24px;
+}
+
+.price-container {
+  background: #989898;
+  background-blend-mode: overlay;
+  border: 1px solid #5F5D5D;
+  backdrop-filter: blur(20px);
+  border-radius: 15px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+
+.price-value {
+  font-family: 'Montserrat', sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 32px;
+  line-height: 39px;
+  color: #FFFFFF;
+}
+
+.price-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.btn--request {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  gap: 10px;
+  background: #EC1D25;
+  border-radius: 5px;
+  font-family: 'Montserrat', sans-serif;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 20px;
+  color: #FFFFFF;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.btn--request:hover {
+  background: #d4181f;
+  transform: translateY(-1px);
+}
+
+.price-contact {
+  font-family: 'Montserrat', sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 20px;
+  color: rgba(245, 245, 245, 0.7);
+  margin: 0;
+  text-align: center;
+}
+
+.car-detail__specs {
+  margin-top: 24px;
+}
+
+
+/* Характеристики автомобиля */
+.specs-container {
+  background: rgba(152, 152, 152, 0.5);
+  background-blend-mode: overlay;
+  border: 1px solid #5F5D5D;
+  backdrop-filter: blur(20px);
+  border-radius: 15px;
+  padding: 24px;
+}
+
+.specs-title {
+  margin: 0 0 20px;
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 29px;
+  color: #FFFFFF;
+}
+
+.specs-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.spec-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0;
+  gap: 20px;
+}
+
+.spec-label {
+  font-family: 'Montserrat', sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 22px;
+  color: rgba(245, 245, 245, 0.7);
+  flex: none;
+}
+
+.spec-value {
+  font-family: 'Montserrat', sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 22px;
+  color: #FFFFFF;
+  flex: none;
+}
+
+
+/* Секция контактов */
+.contacts-section {
+  padding: 80px 0;
+  background: linear-gradient(135deg, #0b0c0f 0%, #1a1d23 100%);
+}
+
+.contacts-section__inner {
+  text-align: center;
+}
+
+.contacts-section__title {
+  font-size: 36px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 16px;
+}
+
+.contacts-section__subtitle {
+  font-size: 18px;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0 0 48px;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.contacts-section__content {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 60px;
+  align-items: center;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.contacts-section__info {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.contacts-section__item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+  transition: background 0.3s ease;
+}
+
+.contacts-section__item:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.contacts-section__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  background: rgba(236, 29, 37, 0.1);
+  border-radius: 12px;
+  color: #ec1d25;
+  flex-shrink: 0;
+}
+
+.contacts-section__content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.contacts-section__label {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+}
+
+.contacts-section__value {
+  font-size: 16px;
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.contacts-section__value:hover {
+  color: #ec1d25;
+}
+
+.contacts-section__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 200px;
+}
+
+
+
+.btn--primary {
+  background: #ec1d25;
+  border: 1px solid #ec1d25;
+  border-radius: 10px;
+  padding: 14px 24px;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: 0.18s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn--primary:hover {
+  filter: brightness(1.05);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 16px rgba(236, 29, 37, 0.30);
+}
+
+.btn--secondary {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.30);
+  border-radius: 10px;
+  padding: 14px 24px;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: 0.18s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn--secondary:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.50);
+}
+
+/* Адаптивность для детальной страницы */
+@media (max-width: 768px) {
+  .car-detail {
+    padding: 20px 0 60px;
+  }
+
+  .car-detail__content {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .car-detail__gallery {
+    position: static;
+  }
+
+  .car-detail__img-wrap {
+    aspect-ratio: 16/12;
+  }
+
+  .car-detail__main-title {
+    margin-bottom: 30px;
+  }
+
+  .car-detail__main-title .car-detail__title {
+    font-size: 24px;
+  }
+
+  .car-detail__price-block {
+    margin-top: 20px;
+  }
+
+  .price-container {
+    padding: 20px;
+  }
+
+  .price-value {
+    font-size: 24px;
+    line-height: 29px;
+  }
+
+  .price-actions {
+    gap: 12px;
+  }
+
+  .btn--request {
+    padding: 8px 16px;
+    font-size: 14px;
+  }
+
+  .price-contact {
+    font-size: 14px;
+  }
+
+  .car-detail__specs {
+    margin-top: 20px;
+  }
+
+  .specs-container {
+    padding: 20px;
+  }
+
+  .specs-title {
+    font-size: 20px;
+    margin-bottom: 16px;
+  }
+
+  .spec-row {
+    gap: 16px;
+  }
+
+  .spec-label {
+    font-size: 16px;
+  }
+
+  .spec-value {
+    font-size: 16px;
+  }
+
+  /* Адаптивность для hero секции автомобиля */
+  .car-hero {
+    min-height: auto;
+    padding: 60px 0;
+  }
+
+  .car-hero__content {
+    grid-template-columns: 1fr;
+    gap: 40px;
+    min-height: auto;
+  }
+
+  .car-hero__title {
+    font-size: 36px;
+  }
+
+  .car-hero__year {
+    font-size: 20px;
+  }
+
+  .car-hero__specs {
+    justify-content: center;
+  }
+
+  .car-hero__price {
+    font-size: 36px;
+    text-align: center;
+  }
+
+  .car-hero__actions {
+    justify-content: center;
+  }
+
+  .car-hero__car-wrapper {
+    max-width: 400px;
+    margin: 0 auto;
+  }
+
+
+/* Адаптивность для секции контактов */
+.contacts-section__title {
+    font-size: 28px;
+}
+
+.contacts-section__content {
+    grid-template-columns: 1fr;
+    gap: 32px;
+    text-align: center;
+}
+
+.contacts-section__info {
+    order: 2;
+}
+
+.contacts-section__actions {
+    order: 1;
+    min-width: auto;
+    align-items: center;
+}
+
+.contacts-section__item {
+    justify-content: center;
+}
+
+/* Общие мобильные улучшения для кнопок и элементов */
+@media (max-width: 768px) {
+    .btn {
+        padding: 10px 16px;
+        font-size: 14px;
+    }
+
+    .btn--calc {
+        font-size: 13px;
+        letter-spacing: 0.01em;
+    }
+
+    .container {
+        width: min(100% - 24px, 1200px);
+    }
+
+    .page-offset {
+        height: 76px;
+    }
+}
+
+@media (max-width: 480px) {
+    .btn {
+        padding: 8px 14px;
+        font-size: 13px;
+    }
+
+    .container {
+        width: min(100% - 16px, 1200px);
+    }
+
+    .page-offset {
+        height: 72px;
+    }
+}
+}
+
+@media (max-width: 480px) {
+  .car-hero__title {
+    font-size: 28px;
+  }
+
+  .car-hero__price {
+    font-size: 32px;
+  }
+
+  .car-hero__specs {
+    gap: 12px;
+  }
+
+  .car-hero__spec {
+    padding: 6px 12px;
+  }
+
+  .car-hero__spec:hover {
+    transform: translateY(-4px);
+    box-shadow:
+      0 12px 24px rgba(0, 0, 0, 0.2),
+      0 0 0 1px rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.18);
+    border-color: rgba(255, 255, 255, 0.12);
+  }
+
+  .contacts-section__title {
+    font-size: 24px;
+  }
+
+  .contacts-section__subtitle {
+    font-size: 16px;
   }
 }

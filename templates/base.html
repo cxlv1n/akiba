@@ -117,10 +117,35 @@
   const toggleNav = () => {
     const opened = nav.classList.toggle('nav--open');
     burger.setAttribute('aria-expanded', opened ? 'true' : 'false');
+    // Закрываем меню при клике вне его области
+    if (opened) {
+      document.addEventListener('click', closeNavOnClickOutside);
+    } else {
+      document.removeEventListener('click', closeNavOnClickOutside);
+    }
   };
+
+  const closeNavOnClickOutside = (event) => {
+    if (!nav.contains(event.target) && !burger.contains(event.target)) {
+      nav.classList.remove('nav--open');
+      burger.setAttribute('aria-expanded', 'false');
+      document.removeEventListener('click', closeNavOnClickOutside);
+    }
+  };
+
   if (burger && nav) {
     burger.addEventListener('click', toggleNav);
   }
+
+  // Закрываем мобильное меню при клике на ссылку
+  const navLinks = nav.querySelectorAll('a');
+  navLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      nav.classList.remove('nav--open');
+      burger.setAttribute('aria-expanded', 'false');
+      document.removeEventListener('click', closeNavOnClickOutside);
+    });
+  });
 </script>
 </body>
 </html>

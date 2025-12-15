@@ -81,7 +81,7 @@
                                     <p class="car-card__price">{{ car.price }} ₽</p>
                                 </div>
 
-                                <a class="btn car-card__btn" href="{% url 'catalog:list' %}">
+                                <a class="btn car-card__btn" href="{% url 'catalog:detail' car.id %}">
                                     Подробнее
                                 </a>
                             </div>
