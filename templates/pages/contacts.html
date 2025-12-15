@@ -4,44 +4,128 @@
 {% block title %}Контакты — AutoImport{% endblock %}
 
 {% block content %}
+
+<!-- Руководство компании -->
+<section class="contacts-management">
+    <div class="container">
+        <div class="contacts-management__header">
+            <p class="eyebrow">Руководство</p>
+            <h1 class="contacts-management__title">Наша команда</h1>
+            <p class="contacts-management__subtitle">Свяжитесь с руководителями для решения любых вопросов</p>
+        </div>
+
+        <div class="contacts-management__grid">
+            <div class="management-card">
+                <div class="management-card__image">
+                    <img src="{% static 'images/kirill-smirnov.png' %}" alt="Смирнов Кирилл Олегович" class="management-card__img">
+                </div>
+                <div class="management-card__content">
+                    <h3 class="management-card__name">Смирнов Кирилл Олегович</h3>
+                    <p class="management-card__position">Генеральный директор</p>
+                    <a href="https://wa.me/79140707353" target="_blank" class="management-card__phone">
+                        <svg class="management-card__phone-icon" viewBox="0 0 24 24" fill="none">
+                            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        +7 914 070-73-53
+                    </a>
+                </div>
+            </div>
+
+            <div class="management-card">
+                <div class="management-card__image">
+                    <img src="{% static 'images/petr-kuznetsov.png' %}" alt="Кузнецов Петр Андреевич" class="management-card__img">
+                </div>
+                <div class="management-card__content">
+                    <h3 class="management-card__name">Кузнецов Петр Андреевич</h3>
+                    <p class="management-card__position">Директор</p>
+                    <a href="https://wa.me/79147979703" target="_blank" class="management-card__phone">
+                        <svg class="management-card__phone-icon" viewBox="0 0 24 24" fill="none">
+                            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        +7 914 797-97-03
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Карта и контактная информация -->
 <section class="contacts-map">
     <div class="container">
+        <div class="contacts-map__header">
+            <p class="eyebrow">Контакты</p>
+            <h2 class="contacts-map__title-main">Как с нами связаться</h2>
+        </div>
+
         <div class="contacts-map__wrapper">
             <div class="contacts-map__map">
-                <iframe 
-                    src="https://widgets.2gis.com/widget?type=firmsonmap&options=%7B%22pos%22%3A%7B%22lat%22%3A43.1156%2C%22lon%22%3A131.8855%2C%22zoom%22%3A16%7D%2C%22opt%22%3A%7B%22theme%22%3A%22dark%22%7D%2C%22org%22%3A%2210000000103062000%22%7D"
+                <iframe
+                    src="https://yandex.ru/map-widget/v1/?ll=131.918309%2C43.124663&z=16&pt=131.918309%2C43.124663%2Cpm2rdm"
                     width="100%"
                     height="100%"
                     frameborder="0"
-                    style="border: 0;"
                     allowfullscreen
-                    loading="lazy"
-                    referrerpolicy="no-referrer-when-downgrade">
+                    loading="lazy">
                 </iframe>
+
             </div>
             <div class="contacts-map__info">
-                <h2 class="contacts-map__title">Офис во Владивостоке</h2>
+                <h3 class="contacts-map__subtitle">Офис во Владивостоке</h3>
                 <div class="contacts-map__details">
                     <div class="contacts-map__item">
-                        <span class="contacts-map__label">Телефон:</span>
-                        <a href="tel:88006009239" class="contacts-map__value">8-800-600-9239</a>
+                        <div class="contacts-map__icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <div class="contacts-map__content">
+                            <span class="contacts-map__label">Телефон</span>
+                            <a href="tel:88006009239" class="contacts-map__value">8-800-600-9239</a>
+                        </div>
                     </div>
                     <div class="contacts-map__item">
-                        <span class="contacts-map__label">Адрес:</span>
-                        <span class="contacts-map__value">г. Владивосток, Красного знамени 96</span>
+                        <div class="contacts-map__icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <circle cx="12" cy="10" r="3" stroke="currentColor" stroke-width="2"/>
+                            </svg>
+                        </div>
+                        <div class="contacts-map__content">
+                            <span class="contacts-map__label">Адрес</span>
+                            <span class="contacts-map__value">г. Владивосток, Красного знамени 96</span>
+                        </div>
                     </div>
                     <div class="contacts-map__item">
-                        <span class="contacts-map__label">Работаем для вас с 10:00 - 19:00, пн - сб</span>
+                        <div class="contacts-map__icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                                <polyline points="12,6 12,12 16,14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <div class="contacts-map__content">
+                            <span class="contacts-map__label">Режим работы</span>
+                            <span class="contacts-map__value">10:00 - 19:00, пн - сб</span>
+                        </div>
                     </div>
                     <div class="contacts-map__item">
-                        <span class="contacts-map__label">E-mail:</span>
-                        <a href="mailto:akibaauto@gmail.com" class="contacts-map__value">akibaauto@gmail.com</a>
+                        <div class="contacts-map__icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <polyline points="22,6 12,13 2,6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <div class="contacts-map__content">
+                            <span class="contacts-map__label">E-mail</span>
+                            <a href="mailto:akibaauto@gmail.com" class="contacts-map__value">akibaauto@gmail.com</a>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
+
 {% endblock %}
 
 

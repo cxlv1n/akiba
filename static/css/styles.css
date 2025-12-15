@@ -423,8 +423,6 @@ a {
     z-index: -1; /* важно: всегда под машиной */
 }
 
-
-
 /* ================== ПОПУЛЯРНЫЕ МОДЕЛИ ================== */
 /* ================== ПОПУЛЯРНЫЕ МОДЕЛИ (refined) ================== */
 
@@ -1617,8 +1615,21 @@ a {
 /* ================== КОНТАКТЫ С КАРТОЙ ================== */
 
 .contacts-map {
-  padding: 0px 0 60px 0;
+  padding: 88px 0 60px 0;
   background: #131313;
+}
+
+.contacts-map__header {
+  text-align: center;
+  margin-bottom: 64px;
+}
+
+.contacts-map__title-main {
+  margin: 16px 0 24px;
+  font-size: clamp(32px, 4vw, 48px);
+  line-height: 1.2;
+  font-weight: 800;
+  color: #ffffff;
 }
 
 .contacts-map__wrapper {
@@ -1704,11 +1715,11 @@ a {
   border-color: rgba(236, 29, 37, 0.3);
 }
 
-.contacts-map__title {
+.contacts-map__subtitle {
   margin: 0 0 32px;
-  font-size: clamp(28px, 3.5vw, 36px);
-  font-weight: 800;
-  line-height: 1.2;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.3;
   color: #ffffff;
   position: relative;
   z-index: 1;
@@ -2700,5 +2711,236 @@ a {
 
   .process-step__text {
     font-size: 14px;
+  }
+}
+
+/* ================== СТРАНИЦА КОНТАКТОВ ================== */
+
+.contacts-management {
+  padding: 88px 0 96px;
+  background: #131313;
+  position: relative;
+  overflow: hidden;
+}
+
+
+.contacts-management__header {
+  text-align: center;
+  margin-bottom: 64px;
+  position: relative;
+  z-index: 1;
+}
+
+.contacts-management__title {
+  margin: 16px 0 24px;
+  font-size: clamp(32px, 4vw, 48px);
+  line-height: 1.2;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.contacts-management__subtitle {
+  margin: 0;
+  font-size: 18px;
+  line-height: 1.6;
+  color: rgba(245, 245, 245, 0.8);
+  max-width: 600px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+.contacts-management__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 32px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.management-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 28px;
+  display: flex;
+  flex-direction: row;
+  gap: 24px;
+  min-height: 280px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.management-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #ec1d25, #ff4757);
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+.management-card:hover::before {
+  transform: scaleX(1);
+}
+
+.management-card:hover {
+  transform: translateY(-8px);
+  box-shadow:
+    0 20px 40px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.management-card__image {
+  width: 40%;
+  flex-shrink: 0;
+  aspect-ratio: 1;
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+  background: rgba(0, 0, 0, 0.25);
+  transition: all 0.3s ease;
+}
+
+.management-card:hover .management-card__image {
+  transform: scale(1.05);
+}
+
+.management-card__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.management-card__content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 12px;
+}
+
+
+.management-card__name {
+  margin: 0 0 8px;
+  font-size: 20px;
+  line-height: 1.4;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 0.01em;
+}
+
+.management-card__position {
+  margin: 0 0 16px;
+  font-size: 14px;
+  font-weight: 600;
+  color: rgba(245, 245, 245, 0.62);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.management-card__phone {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background: rgba(236, 29, 37, 0.1);
+  border: 1px solid rgba(236, 29, 37, 0.2);
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #ec1d25;
+  text-decoration: none;
+  transition: 0.18s ease;
+  margin-top: 16px;
+}
+
+.management-card__phone:hover {
+  background: #ec1d25;
+  color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(236, 29, 37, 0.3);
+}
+
+.management-card__phone-icon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+/* Адаптивность для страницы контактов */
+@media (max-width: 768px) {
+  .contacts-management {
+    padding: 72px 0 80px;
+  }
+
+  .contacts-management__header {
+    margin-bottom: 48px;
+  }
+
+  .contacts-management__title {
+    font-size: 36px;
+  }
+
+  .contacts-management__subtitle {
+    font-size: 16px;
+  }
+
+  .contacts-management__grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .management-card {
+    flex-direction: column;
+    padding: 24px;
+    gap: 16px;
+  }
+
+  .management-card__image {
+    width: 100%;
+    height: 200px;
+    border-radius: 12px;
+  }
+}
+
+@media (max-width: 768px) {
+  .management-card__position {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  .contacts-management {
+    padding: 64px 0 72px;
+  }
+
+  .contacts-management__header {
+    margin-bottom: 40px;
+  }
+
+  .contacts-management__title {
+    font-size: 28px;
+  }
+
+  .management-card {
+    padding: 20px;
+    gap: 14px;
+  }
+
+  .management-card__image {
+    height: 180px;
+  }
+
+  .management-card__name {
+    font-size: 18px;
   }
 }
