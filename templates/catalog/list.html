@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load humanize %}
 
 {% block title %}Каталог — AutoImport{% endblock %}
 
@@ -41,8 +42,8 @@
                 {% for car in cars %}
                     <article class="car-card">
                         <div class="car-card__img-wrap">
-                            {% if car.image_url %}
-                                <img src="{{ car.image_url }}" alt="{{ car.name }}" class="car-card__img">
+                            {% if car.get_image_url %}
+                                <img src="{{ car.get_image_url }}" alt="{{ car.name }}" class="car-card__img">
                             {% else %}
                                 <img src="{% static 'images/placeholder-car.jpg' %}" alt="{{ car.name }}" class="car-card__img">
                             {% endif %}
@@ -78,7 +79,7 @@
                             <div class="car-card__price-row">
                                 <div>
                                     <span class="car-card__label">Стоимость:</span>
-                                    <p class="car-card__price">{{ car.price }} ₽</p>
+                                    <p class="car-card__price">{{ car.price|floatformat:0|intcomma }} ₽</p>
                                 </div>
 
                                 <a class="btn car-card__btn" href="{% url 'catalog:detail' car.id %}">
