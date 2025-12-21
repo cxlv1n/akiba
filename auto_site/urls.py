@@ -25,6 +25,7 @@ urlpatterns = [
     path('catalog/', include('catalog.urls')),
 ]
 
-# Serve media files during development
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+# Serve media files
+# В production на Railway раздаем медиа через Django
+# Для production рекомендуется использовать облачное хранилище (S3, Cloudinary и т.д.)
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
