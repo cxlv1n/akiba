@@ -41,24 +41,30 @@ if not SECRET_KEY:
 # ALLOWED_HOSTS - в production обязательно укажите конкретные домены
 allowed_hosts_env = os.environ.get('DJANGO_ALLOWED_HOSTS', 'localhost,127.0.0.1')
 
-# Если указано "*", добавляем все возможные домены Railway
-if allowed_hosts_env == '*':
+# Проверяем, что мы на Railway (по наличию переменной PORT или DATABASE_URL)
+is_railway = os.environ.get('PORT') is not None or os.environ.get('DATABASE_URL') is not None
+
+# Если указано "*" или мы на Railway, добавляем все возможные домены Railway
+if allowed_hosts_env == '*' or is_railway:
     # Django не поддерживает '*' напрямую, поэтому добавляем все нужные домены
+    # '.up.railway.app' означает все поддомены *.up.railway.app
     ALLOWED_HOSTS = [
         '.up.railway.app',  # Все поддомены Railway (начинающиеся с точки)
-        'akiba-production.up.railway.app',  # Конкретный домен
+        'akiba-production.up.railway.app',  # Конкретный домен для надежности
     ]
+    # Удаляем дубликаты и пустые значения
+    ALLOWED_HOSTS = list(set([h for h in ALLOWED_HOSTS if h]))
 else:
     ALLOWED_HOSTS = [host.strip() for host in allowed_hosts_env.split(',') if host.strip()]
-
-# На Railway автоматически добавляем домены *.up.railway.app если их еще нет
-if not DEBUG:
-    railway_hosts = [
-        '.up.railway.app',  # Все поддомены Railway
-    ]
-    for host in railway_hosts:
-        if host not in ALLOWED_HOSTS:
-            ALLOWED_HOSTS.append(host)
+    # На Railway автоматически добавляем домены *.up.railway.app если их еще нет
+    if is_railway or not DEBUG:
+        railway_hosts = [
+            '.up.railway.app',  # Все поддомены Railway (точка в начале означает все поддомены)
+            'akiba-production.up.railway.app',  # Конкретный домен
+        ]
+        for host in railway_hosts:
+            if host not in ALLOWED_HOSTS:
+                ALLOWED_HOSTS.append(host)
 
 
 # Application definition
