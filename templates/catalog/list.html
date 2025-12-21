@@ -10,29 +10,48 @@
         <h1 class="popular__title">Каталог автомобилей</h1>
         <div class="popular__box">
             <div class="popular__filters">
-                <div class="popular__filters-left">
-                    <button class="filter-pill" type="button">
-                        <span class="filter-pill__label">Марка</span>
-                        <span class="filter-pill__arrow"></span>
-                    </button>
-                    <button class="filter-pill" type="button">
-                        <span class="filter-pill__label">Модель</span>
-                        <span class="filter-pill__arrow"></span>
-                    </button>
-                    <div class="filter-pill filter-pill--range">
-                        <div class="filter-pill__range-item">
-                            <span class="filter-pill__label">Год от</span>
-                            <span class="filter-pill__arrow"></span>
+                <form method="get" action="{% url 'catalog:list' %}" class="popular__filters-form" id="filterForm">
+                    <div class="popular__filters-left">
+                        <div class="filter-select-wrapper">
+                            <select name="manufacturer" class="filter-select" id="manufacturerSelect">
+                                <option value="">Марка</option>
+                                {% for m in manufacturers %}
+                                    <option value="{{ m }}" {% if selected_manufacturer == m %}selected{% endif %}>{{ m }}</option>
+                                {% endfor %}
+                            </select>
                         </div>
-                        <span class="filter-pill__divider"></span>
-                        <div class="filter-pill__range-item">
-                            <span class="filter-pill__label">До</span>
-                            <span class="filter-pill__arrow"></span>
+                        <div class="filter-select-wrapper">
+                            <select name="model" class="filter-select" id="modelSelect">
+                                <option value="">Модель</option>
+                                {% for m in models %}
+                                    <option value="{{ m }}" {% if selected_model == m %}selected{% endif %}>{{ m }}</option>
+                                {% endfor %}
+                            </select>
                         </div>
+                        <div class="filter-select-wrapper filter-select-wrapper--range">
+                            <select name="year_from" class="filter-select" id="yearFromSelect">
+                                <option value="">Год от</option>
+                                {% for year in years %}
+                                    <option value="{{ year }}" {% if selected_year_from == year|stringformat:"d" %}selected{% endif %}>{{ year }}</option>
+                                {% endfor %}
+                            </select>
+                            <span class="filter-select__divider">—</span>
+                            <select name="year_to" class="filter-select" id="yearToSelect">
+                                <option value="">До</option>
+                                {% for year in years %}
+                                    <option value="{{ year }}" {% if selected_year_to == year|stringformat:"d" %}selected{% endif %}>{{ year }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        {% if selected_manufacturer or selected_model or selected_year_from or selected_year_to %}
+                            <a href="{% url 'catalog:list' %}" class="filter-reset" title="Сбросить фильтры">✕</a>
+                        {% endif %}
                     </div>
-                </div>
+                </form>
                 {% if sample %}
                     <span class="muted">Показаны примеры. Добавьте реальные авто через админку.</span>
+                {% elif paginator %}
+                    <span class="muted">Найдено: {{ paginator.count }}</span>
                 {% else %}
                     <span class="muted">Найдено: {{ cars|length }}</span>
                 {% endif %}
@@ -86,12 +105,82 @@
                                     Подробнее
                                 </a>
                             </div>
+                        </div>
                     </article>
                 {% empty %}
                     <p class="muted">Пока нет доступных позиций.</p>
                 {% endfor %}
             </div>
+
+            {% if page_obj and paginator.num_pages > 1 %}
+            <nav class="pagination" aria-label="Пагинация каталога">
+                <div class="pagination__inner">
+                    {% if page_obj.has_previous %}
+                        <a href="?page={{ page_obj.previous_page_number }}" class="pagination__link pagination__link--prev">
+                            &laquo; Назад
+                        </a>
+                    {% endif %}
+
+                    <span class="pagination__info">
+                        Страница {{ page_obj.number }} из {{ paginator.num_pages }}
+                    </span>
+
+                    {% if page_obj.has_next %}
+                        <a href="?page={{ page_obj.next_page_number }}" class="pagination__link pagination__link--next">
+                            Вперёд &raquo;
+                        </a>
+                    {% endif %}
+                </div>
+            </nav>
+            {% endif %}
         </div>
     </div>
 </section>
+
+<script>
+  // Автоматическая отправка формы при изменении фильтров
+  document.addEventListener('DOMContentLoaded', function() {
+    const filterForm = document.getElementById('filterForm');
+    const manufacturerSelect = document.getElementById('manufacturerSelect');
+    const modelSelect = document.getElementById('modelSelect');
+    const selects = filterForm.querySelectorAll('.filter-select');
+    
+    // При изменении марки сбрасываем модель
+    if (manufacturerSelect) {
+      manufacturerSelect.addEventListener('change', function() {
+        if (modelSelect) {
+          modelSelect.value = '';
+        }
+        submitForm();
+      });
+    }
+    
+    // Для остальных фильтров просто отправляем форму
+    selects.forEach(select => {
+      if (select !== manufacturerSelect) {
+        select.addEventListener('change', function() {
+          submitForm();
+        });
+      }
+    });
+    
+    function submitForm() {
+      // Удаляем параметр page при изменении фильтров
+      const formData = new FormData(filterForm);
+      formData.delete('page');
+      
+      // Строим новый URL
+      const params = new URLSearchParams();
+      formData.forEach((value, key) => {
+        if (value) {
+          params.append(key, value);
+        }
+      });
+      
+      // Перенаправляем на новую страницу с фильтрами
+      const newUrl = '{% url "catalog:list" %}' + (params.toString() ? '?' + params.toString() : '');
+      window.location.href = newUrl;
+    }
+  });
+</script>
 {% endblock %}

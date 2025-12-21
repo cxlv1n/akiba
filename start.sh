@@ -11,3 +11,4 @@ python manage.py migrate
 # Start Gunicorn
 echo "Starting Gunicorn..."
 exec gunicorn auto_site.wsgi:application --bind 0.0.0.0:$PORT --workers 2 --threads 2 --access-logfile - --error-logfile - --timeout 30 --keep-alive 2
+

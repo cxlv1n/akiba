@@ -34,8 +34,9 @@ class CarAdmin(admin.ModelAdmin):
             'fields': ('mileage_km', 'fuel', 'transmission', 'body_type', 'engine_volume'),
             'classes': ('collapse',)
         }),
-        ('Изображения (устаревшие поля)', {
-            'fields': ('image_url', 'image', 'image_preview'),
+        ('Изображения', {
+            'fields': ('image_preview',),
+            'description': 'Изображения управляются через галерею ниже',
             'classes': ('collapse',)
         }),
         ('Описание', {
