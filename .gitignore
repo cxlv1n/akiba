@@ -167,9 +167,10 @@ Desktop.ini
 
 # Static and media files (usually not committed)
 staticfiles/
-media/
+# media/  # Временно включено для деплоя на Railway (лучше использовать облачное хранилище)
 
 # Temporary files
 *.tmp
 *.temp
+
 
