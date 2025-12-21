@@ -1,13 +1,12 @@
 import logging
-from decimal import Decimal
-from typing import List, Dict, Optional
+from typing import List, Dict
 
 import requests
 from bs4 import BeautifulSoup
 from django.shortcuts import render
 from django.core.cache import cache
 
-from catalog.models import Car
+from catalog.sample_data import get_cars_or_sample
 
 logger = logging.getLogger(__name__)
 
@@ -58,6 +57,7 @@ def fetch_reviews_from_vl() -> List[Dict[str, str]]:
     """
     Получает отзывы с сайта vl.ru для компании AkibaAuto.
     Возвращает список словарей с информацией об отзывах.
+    Результаты кэшируются на 1 час.
     """
     cache_key = 'vl_reviews'
     cached_reviews = cache.get(cache_key)
@@ -71,13 +71,16 @@ def fetch_reviews_from_vl() -> List[Dict[str, str]]:
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
         }
         
-        response = requests.get(url, headers=headers, timeout=10)
+        response = requests.get(url, headers=headers, timeout=5)  # Уменьшен таймаут
         response.raise_for_status()
         
         soup = BeautifulSoup(response.content, 'html.parser')
         
         # Попытка найти отзывы в различных возможных структурах
-        comment_elements = soup.find_all(['div', 'article', 'section'], class_=lambda x: x and ('comment' in x.lower() or 'review' in x.lower() or 'отзыв' in x.lower()))
+        comment_elements = soup.find_all(
+            ['div', 'article', 'section'], 
+            class_=lambda x: x and ('comment' in x.lower() or 'review' in x.lower() or 'отзыв' in x.lower())
+        )
         
         if not comment_elements:
             comment_elements = soup.find_all('div', attrs={'data-comment': True}) or \
@@ -89,13 +92,19 @@ def fetch_reviews_from_vl() -> List[Dict[str, str]]:
             review_data = {}
             
             # Ищем имя автора
-            author_elem = element.find(['span', 'div', 'p'], class_=lambda x: x and ('author' in x.lower() or 'name' in x.lower() or 'user' in x.lower()))
+            author_elem = element.find(
+                ['span', 'div', 'p'], 
+                class_=lambda x: x and ('author' in x.lower() or 'name' in x.lower() or 'user' in x.lower())
+            )
             if not author_elem:
                 author_elem = element.find('strong')
             author_text = author_elem.get_text(strip=True) if author_elem else ''
             
             # Ищем текст отзыва
-            text_elem = element.find(['p', 'div', 'span'], class_=lambda x: x and ('text' in x.lower() or 'content' in x.lower() or 'message' in x.lower()))
+            text_elem = element.find(
+                ['p', 'div', 'span'], 
+                class_=lambda x: x and ('text' in x.lower() or 'content' in x.lower() or 'message' in x.lower())
+            )
             if not text_elem:
                 text_elem = element.find('p') or element.find('div')
             text_content = text_elem.get_text(strip=True) if text_elem else ''
@@ -112,13 +121,19 @@ def fetch_reviews_from_vl() -> List[Dict[str, str]]:
             review_data['author'] = author_text if author_text and author_text != 'Анонимный пользователь' else 'Клиент'
             
             # Ищем дату
-            date_elem = element.find(['span', 'time', 'div'], class_=lambda x: x and ('date' in x.lower() or 'time' in x.lower()))
+            date_elem = element.find(
+                ['span', 'time', 'div'], 
+                class_=lambda x: x and ('date' in x.lower() or 'time' in x.lower())
+            )
             if not date_elem:
                 date_elem = element.find('time')
             review_data['date'] = date_elem.get_text(strip=True) if date_elem else ''
             
             # Ищем рейтинг/оценку
-            rating_elem = element.find(['span', 'div'], class_=lambda x: x and ('rating' in x.lower() or 'star' in x.lower() or 'score' in x.lower()))
+            rating_elem = element.find(
+                ['span', 'div'], 
+                class_=lambda x: x and ('rating' in x.lower() or 'star' in x.lower() or 'score' in x.lower())
+            )
             review_data['rating'] = rating_elem.get_text(strip=True) if rating_elem else '5'
             
             review_data['text'] = text_content
@@ -132,7 +147,7 @@ def fetch_reviews_from_vl() -> List[Dict[str, str]]:
         cache.set(cache_key, reviews, 3600)
         
     except requests.RequestException as e:
-        logger.error(f"Ошибка при получении отзывов с vl.ru: {e}")
+        logger.warning(f"Ошибка при получении отзывов с vl.ru: {e}")
         reviews = get_default_reviews()
     except Exception as e:
         logger.error(f"Неожиданная ошибка при получении отзывов: {e}")
@@ -142,79 +157,10 @@ def fetch_reviews_from_vl() -> List[Dict[str, str]]:
 
 
 def home(request):
-    cars_qs = Car.objects.all()
-    if cars_qs.exists():
-        cars = list(cars_qs)
-        sample = False
-    else:
-        sample_data = [
-            {
-                "name": "Changan Uni-K",
-                "manufacturer": "Changan",
-                "model": "Uni-K",
-                "year": 2023,
-                "price": Decimal("2850000.00"),
-                "origin": Car.Origin.CHINA,
-                "mileage_km": 15000,
-                "fuel": "Бензин",
-                "transmission": "АТ",
-                "body_type": "Кроссовер",
-                "engine_volume": "2.0 л",
-                "image_url": "https://images.unsplash.com/photo-1542362567-b07e54358753?auto=format&fit=crop&w=800&q=80",
-                "description": "Купе-кроссовер с богатой комплектацией и адаптивным круизом.",
-            },
-            {
-                "name": "Toyota Land Cruiser Prado",
-                "manufacturer": "Toyota",
-                "model": "Land Cruiser Prado",
-                "year": 2021,
-                "price": Decimal("6200000.00"),
-                "origin": Car.Origin.JAPAN,
-                "mileage_km": 32000,
-                "fuel": "Дизель",
-                "transmission": "АКПП",
-                "body_type": "Внедорожник",
-                "engine_volume": "2.8 л",
-                "image_url": "https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?auto=format&fit=crop&w=800&q=80",
-                "description": "Надёжный рамный внедорожник с историей обслуживания.",
-            },
-            {
-                "name": "Hyundai Sonata",
-                "manufacturer": "Hyundai",
-                "model": "Sonata",
-                "year": 2022,
-                "price": Decimal("2400000.00"),
-                "origin": Car.Origin.KOREA,
-                "mileage_km": 18000,
-                "fuel": "Бензин",
-                "transmission": "АКПП",
-                "body_type": "Седан",
-                "engine_volume": "2.0 л",
-                "image_url": "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=800&q=80",
-                "description": "Комфортный седан, комплектация с ассистентами и подогревами.",
-            },
-            {
-                "name": "Zeekr 001",
-                "manufacturer": "Zeekr",
-                "model": "001",
-                "year": 2024,
-                "price": Decimal("4100000.00"),
-                "origin": Car.Origin.CHINA,
-                "mileage_km": 5000,
-                "fuel": "Электро",
-                "transmission": "EV",
-                "body_type": "Фастбэк",
-                "engine_volume": "EV",
-                "image_url": "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=800&q=80",
-                "description": "Полноприводный фастбэк с запасом хода 600+ км.",
-            },
-        ]
-        cars = [Car(**data) for data in sample_data]
-        for car in cars:
-            car.is_sample = True  # type: ignore[attr-defined]
-        sample = True
+    """Главная страница."""
+    cars, sample = get_cars_or_sample()
 
-    # Получаем отзывы
+    # Получаем отзывы (кэшируются на 1 час)
     reviews = fetch_reviews_from_vl()
     
     return render(
@@ -228,14 +174,16 @@ def home(request):
     )
 
 
-
 def about(request):
+    """Страница о компании."""
     return render(request, "pages/about.html")
 
 
 def process(request):
+    """Страница процесса покупки."""
     return render(request, "pages/process.html")
 
 
 def contacts(request):
+    """Страница контактов."""
     return render(request, "pages/contacts.html")

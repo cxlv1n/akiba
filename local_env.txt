@@ -1,0 +1,7 @@
+# Создайте файл .env в корне проекта со следующим содержимым:
+
+DJANGO_SECRET_KEY=django-insecure-local-dev-key-change-in-production
+DJANGO_DEBUG=True
+DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1
+
+

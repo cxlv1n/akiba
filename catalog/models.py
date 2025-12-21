@@ -19,8 +19,6 @@ class Car(models.Model):
     transmission = models.CharField(max_length=50, blank=True)
     body_type = models.CharField(max_length=50, blank=True)
     engine_volume = models.CharField(max_length=50, blank=True)
-    image_url = models.URLField(blank=True)
-    image = models.ImageField(upload_to='cars/', blank=True, null=True)
     description = models.TextField(blank=True)
 
     class Meta:
@@ -31,20 +29,18 @@ class Car(models.Model):
 
     def get_image_url(self):
         """Возвращает URL основного изображения"""
-        # Сначала проверяем основное изображение из галереи
+        # Проверяем основное изображение из галереи
         main_image = self.images.filter(is_main=True).first()
         if main_image:
             return main_image.image.url
 
-        # Затем проверяем одиночное изображение
-        if self.image:
-            return self.image.url
+        # Если основного нет, берем первое изображение из галереи
+        first_image = self.images.first()
+        if first_image:
+            return first_image.image.url
 
-        # Наконец, проверяем URL
-        elif self.image_url:
-            return self.image_url
-        else:
-            return None
+        # Если изображений нет, возвращаем None
+        return None
 
     def get_all_images(self):
         """Возвращает все изображения автомобиля"""

@@ -7,53 +7,54 @@
 {% block content %}
 
 <section class="hero" aria-labelledby="hero-title">
-    <div class="hero__bg" aria-hidden="true"></div>
+    <img src="{% static 'images/Hero_bakc.png' %}" alt="" class="hero__bg" aria-hidden="true">
     <div class="container hero__content">
         <div class="hero__left">
             <h1 class="hero__title" id="hero-title">
                 Автомобили из Японии, Южной Кореи и Китая за 21 день
             </h1>
             <p class="hero__subtitle">
-                Бесплатный просчёт, доставка и растаможка под ключ в любой город России.
+                Бесплатный просчёт, доставка и растаможка<br>
+                под ключ в любой город России.
             </p>
-
-            <ul class="hero__benefits">
-                <li class="hero__benefit hero__benefit--calc">
-                    <span class="hero__benefit-icon"></span>
-                    <span class="hero__benefit-text">
-                        <strong>Бесплатный просчёт</strong> автомобиля по вашим параметрам
-                    </span>
-                </li>
-                <li class="hero__benefit hero__benefit--delivery">
-                    <span class="hero__benefit-icon"></span>
-                    <span class="hero__benefit-text">
-                        <strong>Поставка под ключ</strong> с логистикой и таможней
-                    </span>
-                </li>
-                <li class="hero__benefit hero__benefit--profit">
-                    <span class="hero__benefit-icon"></span>
-                    <span class="hero__benefit-text">
-                        <strong>Экономия до 20&nbsp;%</strong> по сравнению с рынком
-                    </span>
-                </li>
-            </ul>
 
             <div class="hero__actions">
                 <a href="{% url 'catalog:list' %}" class="btn btn--hero">Подобрать автомобиль</a>
                 <a href="{% url 'pages:process' %}" class="btn btn--ghost">Как мы работаем</a>
             </div>
-        </div>
 
-        <div class="hero__right" aria-hidden="true">
-            <div class="hero__car-wrapper">
-                <img src="{% static 'images/1.png' %}"
-                     alt="Чёрный внедорожник на тёмном фоне"
-                     class="hero__car">
-            </div>
+            <ul class="hero__benefits">
+                <li class="hero__benefit hero__benefit--calc">
+                    <div class="hero__benefit-icon">
+                        <svg class="hero__benefit-icon-svg" viewBox="0 0 24 24" fill="none">
+                            <path d="M12 1V23M17 5H9.5C8.57174 5 7.6815 5.36875 7.02513 6.02513C6.36875 6.6815 6 7.57174 6 8.5C6 9.42826 6.36875 10.3185 7.02513 10.9749C7.6815 11.6313 8.57174 12 9.5 12H14.5C15.4283 12 16.3185 12.3687 16.9749 13.0251C17.6313 13.6815 18 14.5717 18 15.5C18 16.4283 17.6313 17.3185 16.9749 17.9749C16.3185 18.6313 15.4283 19 14.5 19H6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <div class="hero__benefit-value">Бесплатный просчёт</div>
+                    <p class="hero__benefit-text">автомобиля по вашим параметрам</p>
+                </li>
+                <li class="hero__benefit hero__benefit--delivery">
+                    <div class="hero__benefit-icon">
+                        <svg class="hero__benefit-icon-svg" viewBox="0 0 24 24" fill="none">
+                            <path d="M3 7V17C3 18.1046 3.89543 19 5 19H19C20.1046 19 21 18.1046 21 17V7C21 5.89543 20.1046 5 19 5H5C3.89543 5 3 5.89543 3 7Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <polyline points="10,9 14,9 14,11 10,11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <div class="hero__benefit-value">Поставка под ключ</div>
+                    <p class="hero__benefit-text">с логистикой и таможней</p>
+                </li>
+                <li class="hero__benefit hero__benefit--profit">
+                    <div class="hero__benefit-icon">
+                        <svg class="hero__benefit-icon-svg" viewBox="0 0 24 24" fill="none">
+                            <path d="M12 2L15.09 8.26L22 9L17 14L18.18 21L12 17.77L5.82 21L7 14L2 9L8.91 8.26L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <div class="hero__benefit-value">до 30%</div>
+                    <p class="hero__benefit-text">Экономии на покупке автомобиля</p>
+                </li>
+            </ul>
         </div>
-    </div>
 </section>
-
 
 <section class="popular" id="popular">
     <div class="container">
@@ -84,7 +85,7 @@
                 <a class="btn btn--calc popular__show-btn" href="{% url 'catalog:list' %}">Показать</a>
             </div>
             <div class="popular__cards">
-                {% for car in cars %}
+                {% for car in cars|slice:":4" %}
                     <article class="car-card">
                         <div class="car-card__img-wrap">
                             {% if car.get_image_url %}
@@ -131,6 +132,7 @@
                                     Подробнее
                                 </a>
                             </div>
+                        </div>
                     </article>
                 {% empty %}
                     <p class="muted">Пока нет доступных позиций.</p>
@@ -150,13 +152,13 @@
             </div>
 
             <!-- Изображение автомобиля -->
-            <div class="benefits__car-photo">
+            <!-- <div class="benefits__car-photo">
                 <img
                     src="{% static 'images/Luxury-BMW-Car-Front-View-PNG.png' %}"
                     alt="BMW M4 F82 - спортивный автомобиль"
                     class="benefits__car-img"
                 >
-            </div>
+            </div> -->
 
             <!-- Сетка преимуществ -->
             <div class="benefits__grid">
@@ -260,14 +262,6 @@
 <section class="social" id="social">
 
     <div class="container social__inner">
-        <div class="social__media">
-            <img src="{% static 'images/3D Render - iphone.png' %}"
-                 alt="iPhone с приложением Akiba Auto"
-                 class="social__iphone">
-            <img src="{% static 'images/3D Render - iphone1.png' %}"
-                 alt="iPhone с приложением Akiba Auto"
-                 class="social__iphone social__iphone--secondary">
-        </div>
         <div class="social__content">
             
             <p class="eyebrow">Социальные сети</p>
@@ -291,8 +285,14 @@
                 </a>
             </div>
         </div>
-
-        
+        <div class="social__media">
+            <img src="{% static 'images/3D Render - iphone.png' %}"
+                 alt="iPhone с приложением Akiba Auto"
+                 class="social__iphone">
+            <img src="{% static 'images/3D Render - iphone1.png' %}"
+                 alt="iPhone с приложением Akiba Auto"
+                 class="social__iphone social__iphone--secondary">
+        </div>
     </div>
     
 </section>
@@ -308,7 +308,8 @@
         </div>
         
         {% if reviews %}
-            <div class="reviews__grid">
+            <div class="reviews__slider">
+                <div class="reviews__track">
                 {% for review in reviews %}
                     <article class="review-card">
                         <div class="review-card__header">
@@ -336,13 +337,13 @@
                             <p class="review-card__text">{{ review.text }}</p>
                         </div>
                     </article>
-                    
                 {% endfor %}
-                <div class="reviews__footer">
-                    <a href="https://www.vl.ru/akibaauto#comments" target="_blank" rel="noopener" class="btn btn--ghost reviews__link">
-                        Читать все отзывы на VL.ru
-                    </a>
                 </div>
+            </div>
+            <div class="reviews__footer">
+                <a href="https://www.vl.ru/akibaauto#comments" target="_blank" rel="noopener" class="btn btn--ghost reviews__link">
+                    Читать все отзывы на VL.ru
+                </a>
             </div>
             
             

@@ -5,11 +5,14 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}AutoImport{% endblock %}</title>
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}?v=71">
     <script type="module" src="https://unpkg.com/@splinetool/viewer@1.12.13/build/spline-viewer.js"></script>
     
 </head>
-<body>
+<body class="page-loading">
 <div id="page">
     <header class="site-header">
         <div class="site-header__bg" aria-hidden="true"></div>
@@ -37,7 +40,7 @@
                             <img src="{% static 'images/Кнопки мобила/вк иконка/VK_Compact_Logo_(2021-present)_svg-edited-free (carve.photos) 4.png' %}" alt="VK" class="social-btn__icon">
                         </a>
                     </div>
-                    <a href="{% url 'catalog:list' %}" class="btn btn--calc">Рассчитать стоимость авто</a>
+                    <a href="#" class="btn btn--calc" data-open-modal="request">Рассчитать стоимость авто</a>
                 </div>
                 <button class="burger" aria-label="Открыть меню" aria-expanded="false" aria-controls="main-nav">
                     <span></span><span></span><span></span>
@@ -63,52 +66,119 @@
     </main>
 
     <footer class="site-footer">
+        <div class="site-footer__glow" aria-hidden="true"></div>
+        <div class="site-footer__accent" aria-hidden="true"></div>
         <div class="container site-footer__inner">
-            <div class="site-footer__main">
-                <div class="site-footer__left">
+            <div class="site-footer__top">
+                <div class="site-footer__brand">
                     <a href="{% url 'pages:home' %}" class="footer-logo" aria-label="Akiba Auto — на главную">
                         <img src="{% static 'images/logo-akiba.png' %}" alt="Akiba Auto" class="footer-logo__img">
                     </a>
-                    <div class="site-footer__socials-mobile" aria-label="Мы в соцсетях">
-                        <a href="https://t.me/akibaautovl" target="_blank" class="social-btn" aria-label="Telegram">
-                            <img src="{% static 'images/Кнопки мобила/тг иконка/20682202 6.png' %}" alt="Telegram" class="social-btn__icon">
-                        </a>
-                        <a href="https://www.instagram.com/akibaauto/" target="_blank" class="social-btn" aria-label="Instagram">
-                            <img src="{% static 'images/Кнопки мобила/инст иконка/2068220 7.png' %}" alt="Instagram" class="social-btn__icon">
-                        </a>
-                        <a href="https://www.youtube.com/channel/UC4PVZayQJqVTBPuBlxFliUw" target="_blank" class="social-btn" aria-label="YouTube">
-                            <img src="{% static 'images/Кнопки мобила/ютуб иконка/2075630 5.png' %}" alt="YouTube" class="social-btn__icon">
-                        </a>
-                        <a href="#" target="_blank" class="social-btn" aria-label="VK">
-                            <img src="{% static 'images/Кнопки мобила/вк иконка/VK_Compact_Logo_(2021-present)_svg-edited-free (carve.photos) 4.png' %}" alt="VK" class="social-btn__icon">
-                        </a>
-                    </div>
+                    <p class="site-footer__tagline">Автомобили из Японии, Кореи и Китая</p>
                 </div>
-                <div class="site-footer__center">
-                    <div class="site-footer__center-content">
-                        <a href="#" class="btn btn--footer">Оставить заявку</a>
-                        <p class="site-footer__copyright">2020-2025 AkibaAuto. Все права защищены. ОГРН: 1212500019258 ИНН: 2540263103</p>
-                    </div>
+                
+                <div class="site-footer__cta">
+                    <a href="#" class="btn btn--footer" data-open-modal="request">
+                        <svg class="btn__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        Оставить заявку
+                    </a>
                 </div>
-                <div class="site-footer__right">
-                    <div class="site-footer__socials" aria-label="Мы в соцсетях">
-                        <a href="https://t.me/akibaautovl" target="_blank" class="social-btn" aria-label="Telegram">
-                            <img src="{% static 'images/Кнопки мобила/тг иконка/20682202 6.png' %}" alt="Telegram" class="social-btn__icon">
-                        </a>
-                        <a href="https://www.instagram.com/akibaauto/" target="_blank" class="social-btn" aria-label="Instagram">
-                            <img src="{% static 'images/Кнопки мобила/инст иконка/2068220 7.png' %}" alt="Instagram" class="social-btn__icon">
-                        </a>
-                        <a href="https://www.youtube.com/channel/UC4PVZayQJqVTBPuBlxFliUw" target="_blank" class="social-btn" aria-label="YouTube">
-                            <img src="{% static 'images/Кнопки мобила/ютуб иконка/2075630 5.png' %}" alt="YouTube" class="social-btn__icon">
-                        </a>
-                        <a href="#" target="_blank" class="social-btn" aria-label="VK">
-                            <img src="{% static 'images/Кнопки мобила/вк иконка/VK_Compact_Logo_(2021-present)_svg-edited-free (carve.photos) 4.png' %}" alt="VK" class="social-btn__icon">
-                        </a>
-                    </div>
+                
+                <div class="site-footer__socials" aria-label="Мы в соцсетях">
+                    <a href="https://t.me/akibaautovl" target="_blank" class="footer-social" aria-label="Telegram">
+                        <img src="{% static 'images/Кнопки мобила/тг иконка/20682202 6.png' %}" alt="Telegram" class="footer-social__icon">
+                    </a>
+                    <a href="https://www.instagram.com/akibaauto/" target="_blank" class="footer-social" aria-label="Instagram">
+                        <img src="{% static 'images/Кнопки мобила/инст иконка/2068220 7.png' %}" alt="Instagram" class="footer-social__icon">
+                    </a>
+                    <a href="https://www.youtube.com/channel/UC4PVZayQJqVTBPuBlxFliUw" target="_blank" class="footer-social" aria-label="YouTube">
+                        <img src="{% static 'images/Кнопки мобила/ютуб иконка/2075630 5.png' %}" alt="YouTube" class="footer-social__icon">
+                    </a>
+                    <a href="#" target="_blank" class="footer-social" aria-label="VK">
+                        <img src="{% static 'images/Кнопки мобила/вк иконка/VK_Compact_Logo_(2021-present)_svg-edited-free (carve.photos) 4.png' %}" alt="VK" class="footer-social__icon">
+                    </a>
                 </div>
+            </div>
+            
+            <div class="site-footer__divider"></div>
+            
+            <div class="site-footer__bottom">
+                <p class="site-footer__copyright">2020-2025 AkibaAuto. Все права защищены. ОГРН: 1212500019258 ИНН: 2540263103</p>
             </div>
         </div>
     </footer>
+</div>
+
+<!-- Модальное окно формы заявки -->
+<div class="request-modal" id="requestModal" style="--union-bg: url('{% static 'images/Union.png' %}');">
+    <div class="request-modal__overlay" id="requestModalOverlay"></div>
+    <div class="request-modal__content">
+        <button class="request-modal__close" id="requestModalClose" aria-label="Закрыть">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none">
+                <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </button>
+        
+        <h2 class="request-modal__title">Заявка на подбор</h2>
+        <p class="request-modal__subtitle">
+            Наш менеджер свяжется с вами и поможет с выбором автомобиля под ваши потребности и бюджет
+        </p>
+        
+        <form class="request-modal__form" id="requestForm">
+            <div class="request-modal__field">
+                <input 
+                    type="text" 
+                    name="name" 
+                    id="requestName" 
+                    class="request-modal__input" 
+                    placeholder="Ваше имя" 
+                    required
+                >
+            </div>
+            
+            <div class="request-modal__field">
+                <input 
+                    type="tel" 
+                    name="phone" 
+                    id="requestPhone" 
+                    class="request-modal__input" 
+                    placeholder="Номер телефона" 
+                    required
+                >
+            </div>
+            
+            <div class="request-modal__field">
+                <input 
+                    type="text" 
+                    name="budget" 
+                    id="requestBudget" 
+                    class="request-modal__input" 
+                    placeholder="Примерный бюджет" 
+                    required
+                >
+            </div>
+            
+            <div class="request-modal__field">
+                <textarea 
+                    name="wishes" 
+                    id="requestWishes" 
+                    class="request-modal__textarea" 
+                    placeholder="Пожелания по авто (марка, модель, год, объем двигателя и т.д.)" 
+                    rows="3"
+                ></textarea>
+            </div>
+            
+            <button type="submit" class="request-modal__submit">
+                Отправить
+            </button>
+            
+            <p class="request-modal__privacy">
+                Нажимая «Отправить» Вы даете согласие на обработку персональных данных в соответствии с политикой конфиденциальности. Ваши данные не передаются третьим лицам.
+            </p>
+        </form>
+    </div>
 </div>
 
 <script>
@@ -146,6 +216,232 @@
       document.removeEventListener('click', closeNavOnClickOutside);
     });
   });
+
+  // ================== PAGE LOAD ANIMATION ==================
+  
+  // Убираем класс loading и добавляем loaded
+  window.addEventListener('load', () => {
+    document.body.classList.remove('page-loading');
+    document.body.classList.add('page-loaded');
+  });
+  
+  // Fallback если load уже произошёл
+  if (document.readyState === 'complete') {
+    document.body.classList.remove('page-loading');
+    document.body.classList.add('page-loaded');
+  }
+
+  // ================== PARALLAX & SCROLL ANIMATIONS ==================
+  
+  // Parallax для hero background
+  const heroBg = document.querySelector('.hero__bg');
+  const socialIphones = document.querySelectorAll('.social__iphone');
+  
+  let ticking = false;
+  
+  function updateParallax() {
+    const scrollY = window.scrollY;
+    
+    // Hero background parallax
+    if (heroBg) {
+      const heroOffset = scrollY * 0.4;
+      heroBg.style.transform = `translateY(${heroOffset}px) scale(1.1)`;
+    }
+    
+    // Social iPhones parallax
+    socialIphones.forEach((phone, index) => {
+      const rect = phone.getBoundingClientRect();
+      if (rect.top < window.innerHeight && rect.bottom > 0) {
+        const speed = index === 0 ? 0.08 : 0.12;
+        const offset = (window.innerHeight - rect.top) * speed;
+        phone.style.transform = `translate(-50%, calc(-50% + ${offset}px))`;
+      }
+    });
+    
+    ticking = false;
+  }
+  
+  // Scroll animations (fade-in elements)
+  const observerOptions = {
+    root: null,
+    rootMargin: '0px 0px -20px 0px',
+    threshold: 0.05
+  };
+  
+  const scrollObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        scrollObserver.unobserve(entry.target);
+      }
+    });
+  }, observerOptions);
+  
+  // Наблюдаем за элементами с анимациями
+  document.querySelectorAll('.fade-in, .fade-in-left, .fade-in-right, .scale-in').forEach(el => {
+    scrollObserver.observe(el);
+  });
+  
+  // Автоматически добавляем классы анимации к секциям
+  function initScrollAnimations() {
+    // Заголовки секций
+    document.querySelectorAll('.popular__title, .benefits__title, .about__title, .social__title, .reviews__title, .contacts-map__title').forEach(el => {
+      if (!el.classList.contains('fade-in')) {
+        el.classList.add('fade-in');
+        scrollObserver.observe(el);
+      }
+    });
+    
+    // Benefit cards с stagger
+    document.querySelectorAll('.benefit-card').forEach((el, i) => {
+      if (!el.classList.contains('fade-in')) {
+        el.classList.add('fade-in', `stagger-${(i % 6) + 1}`);
+        scrollObserver.observe(el);
+      }
+    });
+    
+    // Car cards с stagger
+    document.querySelectorAll('.car-card').forEach((el, i) => {
+      if (!el.classList.contains('fade-in')) {
+        el.classList.add('fade-in', `stagger-${(i % 4) + 1}`);
+        scrollObserver.observe(el);
+      }
+    });
+    
+    // About section
+    const aboutContent = document.querySelector('.about__content');
+    const aboutCert = document.querySelector('.about__certificate');
+    if (aboutContent && !aboutContent.classList.contains('fade-in-left')) {
+      aboutContent.classList.add('fade-in-left');
+      scrollObserver.observe(aboutContent);
+    }
+    if (aboutCert && !aboutCert.classList.contains('fade-in-right')) {
+      aboutCert.classList.add('fade-in-right');
+      scrollObserver.observe(aboutCert);
+    }
+    
+    // Social section
+    const socialMedia = document.querySelector('.social__media');
+    const socialContent = document.querySelector('.social__content');
+    if (socialMedia && !socialMedia.classList.contains('fade-in-left')) {
+      socialMedia.classList.add('fade-in-left');
+      scrollObserver.observe(socialMedia);
+    }
+    if (socialContent && !socialContent.classList.contains('fade-in-right')) {
+      socialContent.classList.add('fade-in-right');
+      scrollObserver.observe(socialContent);
+    }
+    
+    // Review cards
+    document.querySelectorAll('.review-card').forEach((el, i) => {
+      if (!el.classList.contains('scale-in')) {
+        el.classList.add('scale-in', `stagger-${(i % 3) + 1}`);
+        scrollObserver.observe(el);
+      }
+    });
+    
+    // Contacts map
+    const contactsWrapper = document.querySelector('.contacts-map__wrapper');
+    if (contactsWrapper && !contactsWrapper.classList.contains('fade-in')) {
+      contactsWrapper.classList.add('fade-in');
+      scrollObserver.observe(contactsWrapper);
+    }
+  }
+  
+  // Parallax scroll handler
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      requestAnimationFrame(updateParallax);
+      ticking = true;
+    }
+  }, { passive: true });
+  
+  // Init animations on load
+  document.addEventListener('DOMContentLoaded', initScrollAnimations);
+  
+  // Fallback если DOM уже загружен
+  if (document.readyState !== 'loading') {
+    initScrollAnimations();
+  }
+
+  // ================== МОДАЛЬНОЕ ОКНО ФОРМЫ ЗАЯВКИ ==================
+  
+  const requestModal = document.getElementById('requestModal');
+  const requestModalOverlay = document.getElementById('requestModalOverlay');
+  const requestModalClose = document.getElementById('requestModalClose');
+  const requestForm = document.getElementById('requestForm');
+  
+  function openRequestModal() {
+    if (requestModal) {
+      requestModal.classList.add('request-modal--open');
+      document.body.style.overflow = 'hidden';
+    }
+  }
+  
+  function closeRequestModal() {
+    if (requestModal) {
+      requestModal.classList.remove('request-modal--open');
+      document.body.style.overflow = '';
+      if (requestForm) {
+        requestForm.reset();
+      }
+    }
+  }
+  
+  // Открытие модального окна по кнопкам
+  document.querySelectorAll('[data-open-modal="request"]').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+      e.preventDefault();
+      openRequestModal();
+    });
+  });
+  
+  // Также для кнопок с классом btn--calc и btn--footer, если они не имеют внешних ссылок
+  document.querySelectorAll('.btn--calc, .btn--footer, .car-hero__btn').forEach(btn => {
+    if (btn.hasAttribute('data-open-modal')) return;
+    
+    if (btn.href === '#' || (!btn.href || (!btn.href.startsWith('http') && !btn.href.startsWith('tel:') && !btn.href.startsWith('mailto:') && !btn.href.includes('/')))) {
+      const btnText = btn.textContent.trim().toLowerCase();
+      if (btnText.includes('рассчитать') || btnText.includes('оставить заявку') || btnText.includes('заявку')) {
+        btn.addEventListener('click', function(e) {
+          e.preventDefault();
+          openRequestModal();
+        });
+      }
+    }
+  });
+  
+  // Закрытие модального окна
+  if (requestModalOverlay) {
+    requestModalOverlay.addEventListener('click', closeRequestModal);
+  }
+  
+  if (requestModalClose) {
+    requestModalClose.addEventListener('click', closeRequestModal);
+  }
+  
+  // Закрытие по Escape
+  document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape' && requestModal && requestModal.classList.contains('request-modal--open')) {
+      closeRequestModal();
+    }
+  });
+  
+  // Обработка отправки формы
+  if (requestForm) {
+    requestForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // Здесь можно добавить отправку данных на сервер
+      const formData = new FormData(requestForm);
+      console.log('Form data:', Object.fromEntries(formData));
+      
+      // Временное сообщение об успехе
+      alert('Спасибо! Ваша заявка принята. Мы свяжемся с вами в ближайшее время.');
+      
+      closeRequestModal();
+    });
+  }
 </script>
 </body>
 </html>

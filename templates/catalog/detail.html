@@ -42,7 +42,7 @@
             <div class="car-hero__price-block">
                 <div class="car-hero__price">{{ car.price|floatformat:0|intcomma }} ₽</div>
                 <div class="car-hero__actions">
-                    <a href="tel:+79000000000" class="btn btn--calc car-hero__btn">ОСТАВИТЬ ЗАЯВКУ</a>
+                    <a href="#" class="btn btn--calc car-hero__btn" data-open-modal="request">ОСТАВИТЬ ЗАЯВКУ</a>
                 </div>
             </div>
         </div>
@@ -157,35 +157,58 @@
 
             <div class="popular-models__grid">
                 {% for popular_car in popular_cars %}
-                <div class="popular-model-card">
-                    <div class="popular-model-card__image">
-                        {% if popular_car.get_image_url %}
-                            <img src="{{ popular_car.get_image_url }}" alt="{{ popular_car.manufacturer }} {{ popular_car.model }}" loading="lazy">
-                        {% else %}
-                            <img src="{% static 'images/placeholder-car.jpg' %}" alt="{{ popular_car.manufacturer }} {{ popular_car.model }}" loading="lazy">
-                        {% endif %}
-                        <div class="popular-model-card__overlay">
-                            <a href="{% url 'catalog:detail' popular_car.id %}" class="popular-model-card__link">Посмотреть</a>
-                        </div>
-                    </div>
-                    <div class="popular-model-card__content">
-                        <h3 class="popular-model-card__name">{{ popular_car.manufacturer }} {{ popular_car.model }}</h3>
-                        <div class="popular-model-card__price">от {{ popular_car.price|floatformat:0|intcomma }} ₽</div>
-                        <div class="popular-model-card__specs">
-                            <span class="spec-item">{{ popular_car.year }} г.</span>
-                            {% if popular_car.body_type %}
-                                <span class="spec-item">{{ popular_car.body_type }}</span>
-                            {% endif %}
-                            {% if popular_car.engine_volume %}
-                                <span class="spec-item">{{ popular_car.engine_volume }}</span>
+                    <article class="car-card">
+                        <div class="car-card__img-wrap">
+                            {% if popular_car.get_image_url %}
+                                <img src="{{ popular_car.get_image_url }}" alt="{{ popular_car.name }}" class="car-card__img">
+                            {% else %}
+                                <img src="{% static 'images/placeholder-car.jpg' %}" alt="{{ popular_car.name }}" class="car-card__img">
                             {% endif %}
                         </div>
-                    </div>
-                </div>
+                        <div class="car-card__body">
+                            <p class="car-card__pub">Номер публикации #{{ forloop.counter|add:1000 }}</p>
+                            <h3 class="car-card__title">{{ popular_car.manufacturer }} {{ popular_car.model }}</h3>
+
+                            <div class="car-card__row">
+                                <div class="car-card__col">
+                                    <span class="car-card__label">Кузов</span>
+                                    <span class="car-card__value">{{ popular_car.body_type|default:"-" }}</span>
+                                </div>
+                                <div class="car-card__col">
+                                    <span class="car-card__label">Год выпуска</span>
+                                    <span class="car-card__value">{{ popular_car.year }}</span>
+                                </div>
+                            </div>
+
+                            <div class="car-card__row">
+                                <div class="car-card__col">
+                                    <span class="car-card__label">Пробег</span>
+                                    <span class="car-card__value">{{ popular_car.mileage_km }} км</span>
+                                </div>
+                                <div class="car-card__col">
+                                    <span class="car-card__label">Объем двигателя</span>
+                                    <span class="car-card__value">{{ popular_car.engine_volume|default:"-" }}</span>
+                                </div>
+                            </div>
+
+                            <div class="car-card__divider"></div>
+
+                            <div class="car-card__price-row">
+                                <div>
+                                    <span class="car-card__label">Стоимость:</span>
+                                    <p class="car-card__price">{{ popular_car.price|floatformat:0|intcomma }} ₽</p>
+                                </div>
+
+                                <a class="btn car-card__btn" href="{% url 'catalog:detail' popular_car.id %}">
+                                    Подробнее
+                                </a>
+                            </div>
+                        </div>
+                    </article>
                 {% empty %}
-                <div class="popular-models__empty">
-                    <p>Популярные модели скоро появятся в каталоге</p>
-                </div>
+                    <div class="popular-models__empty">
+                        <p>Популярные модели скоро появятся в каталоге</p>
+                    </div>
                 {% endfor %}
             </div>
 
@@ -418,3 +441,5 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 {% endblock %}
+
+
