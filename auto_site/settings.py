@@ -39,7 +39,26 @@ if not SECRET_KEY:
         raise ValueError("DJANGO_SECRET_KEY environment variable is required in production!")
 
 # ALLOWED_HOSTS - в production обязательно укажите конкретные домены
-ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
+allowed_hosts_env = os.environ.get('DJANGO_ALLOWED_HOSTS', 'localhost,127.0.0.1')
+
+# Если указано "*", добавляем все возможные домены Railway
+if allowed_hosts_env == '*':
+    # Django не поддерживает '*' напрямую, поэтому добавляем все нужные домены
+    ALLOWED_HOSTS = [
+        '.up.railway.app',  # Все поддомены Railway (начинающиеся с точки)
+        'akiba-production.up.railway.app',  # Конкретный домен
+    ]
+else:
+    ALLOWED_HOSTS = [host.strip() for host in allowed_hosts_env.split(',') if host.strip()]
+
+# На Railway автоматически добавляем домены *.up.railway.app если их еще нет
+if not DEBUG:
+    railway_hosts = [
+        '.up.railway.app',  # Все поддомены Railway
+    ]
+    for host in railway_hosts:
+        if host not in ALLOWED_HOSTS:
+            ALLOWED_HOSTS.append(host)
 
 
 # Application definition
