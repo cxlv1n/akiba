@@ -24,7 +24,7 @@ a {
 }
 
 .container {
-    width: min(1200px, 100% - 32px);
+    width: min(1200px, 100% - 16px);
     margin: 0 auto;
 }
 
@@ -374,9 +374,29 @@ a {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: center;
+    object-position: center;      
     z-index: 0;
     display: block;
+  }
+
+  /* По умолчанию показываем обычное изображение, скрываем ultrawide */
+  .hero__bg--ultrawide {
+    display: none;
+  }
+
+  /* Для экранов с соотношением сторон 21:9 и шире показываем ultrawide */
+  @media (min-aspect-ratio: 21/9) {
+    .hero__bg--default {
+      display: none;
+    }
+    
+    .hero__bg--ultrawide {
+      display: block;
+      object-fit: contain;
+      object-position: center;
+      width: 100%;
+      height: 100%;
+    }
   }
   
   .hero__content {
@@ -1515,11 +1535,6 @@ a {
 .about__card {
   width: min(100%, 380px);
   aspect-ratio: 3 / 4;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 14px;
-  padding: 8px;
-  backdrop-filter: blur(10px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1544,7 +1559,7 @@ a {
 .social__inner {
   position: relative;
   display: grid;
-  grid-template-columns: 1.1fr 1fr;
+  grid-template-columns: 1fr 1.1fr;
   gap: 38px;
   align-items: center;
   
@@ -1553,7 +1568,21 @@ a {
 .social__content {
   display: grid;
   gap: 18px;
-  
+  order: 2;
+}
+
+.social .eyebrow {
+  margin: 0 0 12px;
+  display: inline-flex;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: rgba(245, 245, 245, 0.82);
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  width: fit-content;
 }
 
 .social__stats {
@@ -1620,6 +1649,7 @@ a {
 .social__media {
   position: relative;
   min-height: 800px;
+  order: 1;
 }
 
 .social__iphone {
@@ -1647,8 +1677,16 @@ a {
     gap: 26px;
   }
 
+  .social__content {
+    order: 1;
+  }
+
+  .social__media {
+    order: 2;
+  }
+
   .social__iphone {
-    width: 300px;
+    width: 380px;
   }
 
   .social__iphone--secondary {
@@ -1677,7 +1715,7 @@ a {
   }
 
   .social__iphone {
-    width: 240px;
+    width: 320px;
   }
 
   .social__iphone--secondary {
@@ -1786,18 +1824,25 @@ a {
   height: 2px;
   background: linear-gradient(90deg, #ec1d25, #ff4757);
   transform: scaleX(0);
-  transition: transform 0.3s ease;
+  transform-origin: left;
+  transition: transform 0.3s ease, background 0.3s ease;
 }
 
 .benefit-card:hover::before {
   transform: scaleX(1);
 }
 
+.benefit-card--primary::before {
+  background: linear-gradient(90deg, #ffffff, rgba(255, 255, 255, 0.9));
+}
+
+.benefit-card--primary:hover::before {
+  background: linear-gradient(90deg, #ffffff, rgba(255, 255, 255, 0.9));
+}
+
 .benefit-card:hover {
-  transform: translateY(-8px);
-  box-shadow:
-    0 20px 40px rgba(0, 0, 0, 0.3),
-    0 0 0 1px rgba(255, 255, 255, 0.1);
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
   background: rgba(255, 255, 255, 0.05);
   border-color: rgba(255, 255, 255, 0.15);
 }
@@ -1836,7 +1881,7 @@ a {
 }
 
 .benefit-card:hover .benefit-card__icon {
-  transform: scale(1.1);
+  transform: scale(1.05);
 }
 
 /* Значение */
@@ -1846,6 +1891,11 @@ a {
   line-height: 1;
   color: #ffffff;
   letter-spacing: -0.02em;
+  transition: transform 0.3s ease;
+}
+
+.benefit-card:hover .benefit-card__value {
+  transform: scale(1.02);
 }
 
 
@@ -1865,8 +1915,8 @@ a {
 }
 
 .benefit-card--primary:hover {
-  background: rgba(236, 29, 36, 0.6);
-  border-color: rgba(236, 29, 37, 0.8);
+  background: rgba(236, 29, 36, 0.65);
+  border-color: rgba(236, 29, 37, 0.9);
   box-shadow: 0 8px 32px rgba(236, 29, 37, 0.4);
 }
 
@@ -4339,7 +4389,7 @@ a {
   align-items: center;
   background: #131313;
   overflow: hidden;
-  padding: 100px 0 80px;
+  padding: 10px 0 10px;
 }
 
 .car-hero__bg {
@@ -4357,8 +4407,40 @@ a {
   z-index: 2;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 80px;
+  gap: 60px;
   align-items: center;
+}
+
+/* Уменьшаем отступы на больших экранах */
+@media (min-width: 1200px) {
+  .car-hero__content {
+    gap: 50px;
+  }
+}
+
+@media (min-width: 1400px) {
+  .car-hero__content {
+    gap: 40px;
+  }
+}
+
+@media (min-width: 1600px) {
+  .car-hero__content {
+    gap: 30px;
+  }
+}
+
+/* Ограничиваем ширину контейнера на странице деталей для больших экранов */
+@media (min-width: 1400px) {
+  .car-hero .container {
+    max-width: 1400px;
+  }
+}
+
+@media (min-width: 1920px) {
+  .car-hero .container {
+    max-width: 1600px;
+  }
 }
 
 .car-hero__left {
@@ -5307,7 +5389,7 @@ a {
 /* Популярные модели */
 .popular-models-section {
   position: relative;
-  padding: 120px 0;
+  padding: 10px 0 0px;
   background: #131313;
   overflow: hidden;
 }
