@@ -4,7 +4,9 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{% block title %}AutoImport{% endblock %}</title>
+    <title>{% block title %}AkibaAuto{% endblock %}</title>
+    <link rel="icon" type="image/png" href="{% static 'images/akiba_auto_min.png' %}">
+    <link rel="apple-touch-icon" href="{% static 'images/logo-akiba.png' %}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -234,7 +236,6 @@
   // ================== PARALLAX & SCROLL ANIMATIONS ==================
   
   // Parallax для hero background
-  const heroBg = document.querySelector('.hero__bg');
   const socialIphones = document.querySelectorAll('.social__iphone');
   
   let ticking = false;
@@ -242,10 +243,15 @@
   function updateParallax() {
     const scrollY = window.scrollY;
     
-    // Hero background parallax
-    if (heroBg) {
+    // Hero background parallax - выбираем видимое изображение
+    const heroBgs = document.querySelectorAll('.hero__bg');
+    const visibleBg = Array.from(heroBgs).find(bg => 
+      window.getComputedStyle(bg).display !== 'none'
+    );
+    
+    if (visibleBg) {
       const heroOffset = scrollY * 0.4;
-      heroBg.style.transform = `translateY(${heroOffset}px) scale(1.1)`;
+      visibleBg.style.transform = `translateY(${heroOffset}px) scale(1.1)`;
     }
     
     // Social iPhones parallax
@@ -259,6 +265,78 @@
     });
     
     ticking = false;
+  }
+  
+  // ================== NUMBER COUNTER ANIMATION ==================
+  
+  function animateCounter(element) {
+    const target = parseFloat(element.getAttribute('data-count'));
+    const prefix = element.getAttribute('data-prefix') || '';
+    const suffix = element.getAttribute('data-suffix') || '';
+    const duration = 800; // 1 секунда (быстрее)
+    const startTime = performance.now();
+    const startValue = 0;
+    
+    function formatNumber(num) {
+      if (num >= 1000) {
+        return Math.floor(num).toLocaleString('ru-RU');
+      }
+      return Math.floor(num);
+    }
+    
+    function updateCounter(currentTime) {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      
+      // Почти линейная анимация - только легкое ускорение в самом начале (первые 20%)
+      // Остальные 80% - полностью линейно, без замедления
+      let easedProgress;
+      if (progress < 0.2) {
+        // Легкое ускорение в начале
+        easedProgress = progress * progress * 2.5;
+      } else {
+        // Полностью линейно до конца
+        easedProgress = 0.1 + (progress - 0.2) * 1.125; // 1.125 = 0.9 / 0.8
+      }
+      
+      const finalProgress = Math.min(easedProgress, 1);
+      const currentValue = startValue + (target - startValue) * finalProgress;
+      
+      element.textContent = prefix + formatNumber(currentValue) + suffix;
+      
+      if (progress < 1) {
+        requestAnimationFrame(updateCounter);
+      } else {
+        // Гарантируем финальное значение
+        element.textContent = prefix + formatNumber(target) + suffix;
+      }
+    }
+    
+    requestAnimationFrame(updateCounter);
+  }
+  
+  // Observer для счетчиков
+  const counterObserverOptions = {
+    root: null,
+    rootMargin: '0px',
+    threshold: 0.5
+  };
+  
+  const counterObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && !entry.target.classList.contains('counted')) {
+        entry.target.classList.add('counted');
+        animateCounter(entry.target);
+        counterObserver.unobserve(entry.target);
+      }
+    });
+  }, counterObserverOptions);
+  
+  // Инициализация счетчиков
+  function initCounters() {
+    document.querySelectorAll('[data-count]').forEach(counter => {
+      counterObserver.observe(counter);
+    });
   }
   
   // Scroll animations (fade-in elements)
@@ -357,11 +435,15 @@
   }, { passive: true });
   
   // Init animations on load
-  document.addEventListener('DOMContentLoaded', initScrollAnimations);
+  document.addEventListener('DOMContentLoaded', () => {
+    initScrollAnimations();
+    initCounters();
+  });
   
   // Fallback если DOM уже загружен
   if (document.readyState !== 'loading') {
     initScrollAnimations();
+    initCounters();
   }
 
   // ================== МОДАЛЬНОЕ ОКНО ФОРМЫ ЗАЯВКИ ==================
