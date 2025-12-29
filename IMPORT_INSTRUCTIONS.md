@@ -84,3 +84,4 @@ python manage.py shell
 >>> CarImage.objects.count()
 ```
 
+

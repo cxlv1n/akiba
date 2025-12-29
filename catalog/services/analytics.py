@@ -302,3 +302,4 @@ class AnalyticsService:
             recent_views__gte=min_views
         ).order_by('-recent_views').prefetch_related('photos')[:limit]
 
+

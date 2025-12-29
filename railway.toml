@@ -14,3 +14,4 @@ DJANGO_ALLOWED_HOSTS = "*"
 # Примечание: settings.py автоматически обработает "*" и добавит домены Railway
 
 
+

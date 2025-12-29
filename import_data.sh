@@ -25,3 +25,4 @@ python manage.py import_from_dle --clear
 echo ""
 echo "=== Импорт завершён ==="
 
+
