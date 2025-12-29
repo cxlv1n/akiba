@@ -38,7 +38,7 @@
                         <a href="https://www.youtube.com/channel/UC4PVZayQJqVTBPuBlxFliUw" target="_blank" class="social-btn" aria-label="YouTube">
                             <img src="{% static 'images/Кнопки мобила/ютуб иконка/2075630 5.png' %}" alt="YouTube" class="social-btn__icon">
                         </a>
-                        <a href="#" target="_blank" class="social-btn" aria-label="VK">
+                        <a href="https://vk.com/akibaauto" target="_blank" class="social-btn" aria-label="VK">
                             <img src="{% static 'images/Кнопки мобила/вк иконка/VK_Compact_Logo_(2021-present)_svg-edited-free (carve.photos) 4.png' %}" alt="VK" class="social-btn__icon">
                         </a>
                     </div>
@@ -98,7 +98,7 @@
                     <a href="https://www.youtube.com/channel/UC4PVZayQJqVTBPuBlxFliUw" target="_blank" class="footer-social" aria-label="YouTube">
                         <img src="{% static 'images/Кнопки мобила/ютуб иконка/2075630 5.png' %}" alt="YouTube" class="footer-social__icon">
                     </a>
-                    <a href="#" target="_blank" class="footer-social" aria-label="VK">
+                    <a href="https://vk.com/akibaauto" target="_blank" class="footer-social" aria-label="VK">
                         <img src="{% static 'images/Кнопки мобила/вк иконка/VK_Compact_Logo_(2021-present)_svg-edited-free (carve.photos) 4.png' %}" alt="VK" class="footer-social__icon">
                     </a>
                 </div>
@@ -452,11 +452,50 @@
   const requestModalOverlay = document.getElementById('requestModalOverlay');
   const requestModalClose = document.getElementById('requestModalClose');
   const requestForm = document.getElementById('requestForm');
-  
+
+  // Константы для работы с localStorage
+  const FORM_LAST_SHOWN_KEY = 'akiba_form_last_shown';
+  const FORM_SUBMITTED_KEY = 'akiba_form_submitted';
+  const FORM_COOLDOWN_MINUTES = 5;
+
+  // Функция для проверки, можно ли показать форму
+  function canShowRequestModal() {
+    const now = Date.now();
+
+    // Проверяем, отправлял ли пользователь заявку
+    const hasSubmitted = localStorage.getItem(FORM_SUBMITTED_KEY);
+    if (hasSubmitted === 'true') {
+      return false; // Если уже отправлял, не показываем
+    }
+
+    // Проверяем время последнего показа
+    const lastShown = localStorage.getItem(FORM_LAST_SHOWN_KEY);
+    if (lastShown) {
+      const timeSinceLastShow = now - parseInt(lastShown);
+      const cooldownMs = FORM_COOLDOWN_MINUTES * 60 * 1000; // 5 минут в миллисекундах
+      if (timeSinceLastShow < cooldownMs) {
+        return false; // Еще не прошло 10 минут
+      }
+    }
+
+    return true; // Можно показать
+  }
+
+  // Функция для сохранения времени последнего показа формы
+  function saveFormShownTime() {
+    localStorage.setItem(FORM_LAST_SHOWN_KEY, Date.now().toString());
+  }
+
+  // Функция для отметки, что форма была отправлена
+  function markFormAsSubmitted() {
+    localStorage.setItem(FORM_SUBMITTED_KEY, 'true');
+  }
+
   function openRequestModal() {
-    if (requestModal) {
+    if (requestModal && canShowRequestModal()) {
       requestModal.classList.add('request-modal--open');
       document.body.style.overflow = 'hidden';
+      saveFormShownTime(); // Сохраняем время показа
     }
   }
   
@@ -474,20 +513,40 @@
   document.querySelectorAll('[data-open-modal="request"]').forEach(btn => {
     btn.addEventListener('click', function(e) {
       e.preventDefault();
-      openRequestModal();
+      if (canShowRequestModal()) {
+        openRequestModal();
+      } else {
+        // Показываем сообщение пользователю
+        const hasSubmitted = localStorage.getItem(FORM_SUBMITTED_KEY) === 'true';
+        if (hasSubmitted) {
+          alert('Вы уже отправили заявку. Мы свяжемся с вами в ближайшее время.');
+        } else {
+          alert('Форма заявки будет доступна через несколько минут.');
+        }
+      }
     });
   });
   
   // Также для кнопок с классом btn--calc и btn--footer, если они не имеют внешних ссылок
   document.querySelectorAll('.btn--calc, .btn--footer, .car-hero__btn').forEach(btn => {
     if (btn.hasAttribute('data-open-modal')) return;
-    
+
     if (btn.href === '#' || (!btn.href || (!btn.href.startsWith('http') && !btn.href.startsWith('tel:') && !btn.href.startsWith('mailto:') && !btn.href.includes('/')))) {
       const btnText = btn.textContent.trim().toLowerCase();
       if (btnText.includes('рассчитать') || btnText.includes('оставить заявку') || btnText.includes('заявку')) {
         btn.addEventListener('click', function(e) {
           e.preventDefault();
-          openRequestModal();
+          if (canShowRequestModal()) {
+            openRequestModal();
+          } else {
+            // Показываем сообщение пользователю
+            const hasSubmitted = localStorage.getItem(FORM_SUBMITTED_KEY) === 'true';
+            if (hasSubmitted) {
+              alert('Вы уже отправили заявку. Мы свяжемся с вами в ближайшее время.');
+            } else {
+              alert('Форма заявки будет доступна через 5 минут.');
+            }
+          }
         });
       }
     }
@@ -509,18 +568,28 @@
     }
   });
   
+  // Автоматический показ формы через 30 секунд после загрузки страницы
+  setTimeout(function() {
+    if (canShowRequestModal()) {
+      openRequestModal();
+    }
+  }, 30000); // 30 секунд
+
   // Обработка отправки формы
   if (requestForm) {
     requestForm.addEventListener('submit', function(e) {
       e.preventDefault();
-      
+
       // Здесь можно добавить отправку данных на сервер
       const formData = new FormData(requestForm);
       console.log('Form data:', Object.fromEntries(formData));
-      
+
+      // Отмечаем, что форма была отправлена
+      markFormAsSubmitted();
+
       // Временное сообщение об успехе
       alert('Спасибо! Ваша заявка принята. Мы свяжемся с вами в ближайшее время.');
-      
+
       closeRequestModal();
     });
   }

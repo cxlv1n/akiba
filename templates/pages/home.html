@@ -20,7 +20,7 @@
             </p>
 
             <div class="hero__actions">
-                <a href="{% url 'catalog:list' %}" class="btn btn--hero">Подобрать автомобиль</a>
+                <button type="button" class="btn btn--hero" data-open-modal="request">Подобрать автомобиль</button>
                 <a href="{% url 'pages:process' %}" class="btn btn--ghost">Как мы работаем</a>
             </div>
 
@@ -129,7 +129,7 @@
                                     <p class="car-card__price">{{ car.price|floatformat:0|intcomma }} ₽</p>
                                 </div>
 
-                                <a class="btn car-card__btn" href="{% url 'catalog:list' %}">
+                                <a class="btn car-card__btn" href="{% url 'catalog:detail' car.id %}">
                                     Подробнее
                                 </a>
                             </div>
