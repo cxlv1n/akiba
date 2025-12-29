@@ -173,4 +173,7 @@ staticfiles/
 *.tmp
 *.temp
 
+# Database files
+*.sql
+
 
