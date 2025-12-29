@@ -1,0 +1,56 @@
+{% extends "admin/change_list.html" %}
+{% load static %}
+
+{% block content_title %}
+    <h1>Все поля формы заявки</h1>
+{% endblock %}
+
+{% block result_list %}
+    <div style="margin-bottom: 20px; background: #1a1a1a; border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; overflow: hidden;">
+        <div style="background: #ec1d25; padding: 14px 18px;">
+            <h2 style="margin: 0; color: #fff; font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.02em;">Базовые поля формы</h2>
+        </div>
+        <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+                <tr>
+                    <th style="padding: 14px 18px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.08); color: rgba(255,255,255,0.5); font-size: 12px; font-weight: 600;">Название</th>
+                    <th style="padding: 14px 18px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.08); color: rgba(255,255,255,0.5); font-size: 12px; font-weight: 600;">Тип</th>
+                    <th style="padding: 14px 18px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.08); color: rgba(255,255,255,0.5); font-size: 12px; font-weight: 600;">Подсказка</th>
+                    <th style="padding: 14px 18px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.08); color: rgba(255,255,255,0.5); font-size: 12px; font-weight: 600;">Обязательное</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for field in base_form_fields %}
+                <tr style="transition: background 0.18s;">
+                    <td style="padding: 14px 18px; border-bottom: 1px solid rgba(255,255,255,0.08); color: #f5f5f5; font-weight: 500;">
+                        <a href="/admin/pages/baseformfield/{{ field.id }}/change/" style="color: #ec1d25; text-decoration: none;">{{ field.label }}</a>
+                    </td>
+                    <td style="padding: 14px 18px; border-bottom: 1px solid rgba(255,255,255,0.08); color: rgba(255,255,255,0.7);">{{ field.get_field_type_display }}</td>
+                    <td style="padding: 14px 18px; border-bottom: 1px solid rgba(255,255,255,0.08); color: rgba(255,255,255,0.5);">{{ field.placeholder|default:field.label }}</td>
+                    <td style="padding: 14px 18px; border-bottom: 1px solid rgba(255,255,255,0.08);">
+                        {% if field.required %}<span style="color: #28a745; font-weight: 600;">✓</span>{% else %}<span style="color: rgba(255,255,255,0.3);">—</span>{% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" style="padding: 20px 18px; color: rgba(255,255,255,0.5); text-align: center;">Базовые поля не найдены. Запустите команду init_base_form_fields.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <p style="margin: 0; padding: 14px 18px; color: rgba(255,255,255,0.5); font-size: 13px; border-top: 1px solid rgba(255,255,255,0.08);">
+            Редактировать в разделе <a href="/admin/pages/baseformfield/" style="color: #ec1d25; font-weight: 600;">Базовые поля формы</a>
+        </p>
+    </div>
+    
+    <div style="margin-bottom: 20px; background: #1a1a1a; border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; overflow: hidden;">
+        <div style="background: rgba(255,255,255,0.05); padding: 14px 18px; border-bottom: 1px solid rgba(255,255,255,0.08);">
+            <h2 style="margin: 0; color: #f5f5f5; font-size: 14px; font-weight: 600;">Дополнительные поля</h2>
+        </div>
+        <p style="margin: 0; padding: 14px 18px; color: rgba(255,255,255,0.5); font-size: 13px;">
+            Добавляйте новые поля для формы заявки через кнопку "Добавить"
+        </p>
+    </div>
+    
+    {{ block.super }}
+{% endblock %}

@@ -8,144 +8,344 @@
 
 <!-- Hero секция с автомобилем -->
 <section class="car-hero" aria-labelledby="car-hero-title">
-    <div class="car-hero__bg" aria-hidden="true"></div>
     <div class="container car-hero__content">
         <div class="car-hero__left">
-            <nav class="breadcrumb">
-                <a href="{% url 'pages:home' %}" class="breadcrumb__link">Главная</a>
-                <span class="breadcrumb__separator">/</span>
-                <a href="{% url 'catalog:list' %}" class="breadcrumb__link">Каталог</a>
-                <span class="breadcrumb__separator">/</span>
+            <!-- Навигация -->
+            <nav class="breadcrumb" role="navigation" aria-label="Навигация по сайту">
+                <a href="{% url 'pages:home' %}" class="breadcrumb__link">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+                        <polyline points="9,22 9,12 15,12 15,22"/>
+                    </svg>
+                    Главная
+                </a>
+                <span class="breadcrumb__separator" aria-hidden="true">/</span>
+                <a href="{% url 'catalog:list' %}" class="breadcrumb__link">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="18" height="18" rx="2"/>
+                        <rect x="9" y="9" width="6" height="6"/>
+                    </svg>
+                    Каталог
+                </a>
+                <span class="breadcrumb__separator" aria-hidden="true">/</span>
                 <span class="breadcrumb__current">{{ car.manufacturer }} {{ car.model }}</span>
             </nav>
 
-            <h1 class="car-hero__title" id="car-hero-title">
-                {{ car.manufacturer }} {{ car.model }}
-                <span class="car-hero__year">{{ car.year }} года</span>
-            </h1>
+            <!-- Основная информация -->
+            <div class="car-hero__main-info">
+                
 
+                <h1 class="car-hero__title" id="car-hero-title">
+                    {{ car.model }}
+                </h1>
+
+                <div class="car-hero__meta">
+                    <div class="car-hero__meta-item">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                            <path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span>{{ car.year }} год</span>
+                    </div>
+                    <div class="car-hero__meta-item">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                            <path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span>
+                            {% if car.origin == "CN" %}Китай
+                            {% elif car.origin == "JP" %}Япония
+                            {% elif car.origin == "KR" %}Корея
+                            {% else %}{{ car.origin }}{% endif %}
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <!-- Цена и действия -->
+            <div class="car-hero__pricing">
+                <div class="car-hero__price-row">
+                    <span class="car-hero__price-value">{{ car.price|floatformat:0|intcomma }} ₽</span>
+                </div>
+
+                <div class="car-hero__actions">
+                    <a href="#" class="car-hero__cta-btn" data-open-modal="request">
+                        <span class="car-hero__cta-text">Оставить заявку</span>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                            <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </a>
+                    <div class="car-hero__guarantee">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                            <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span>Бесплатный расчёт</span>
+                    </div>
+                </div>
+            <!-- Ключевые характеристики -->
             <div class="car-hero__specs">
-                <div class="car-hero__spec">
-                    <span class="car-hero__spec-text">{{ car.body_type|default:"—" }}</span>
-                </div>
-                <div class="car-hero__spec">
-                    <span class="car-hero__spec-text">{{ car.engine_volume|default:"—" }}</span>
-                </div>
-                <div class="car-hero__spec">
-                    <span class="car-hero__spec-text">{{ car.mileage_km }} км</span>
-                </div>
-                <div class="car-hero__spec">
-                    <span class="car-hero__spec-text">{{ car.fuel|default:"—" }}</span>
+                <h3 class="car-hero__specs-title">Характеристики</h3>
+                <div class="car-hero__specs-grid">
+                    <div class="car-hero__spec-card">
+                        <div class="car-hero__spec-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                <path d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <div class="car-hero__spec-content">
+                            <div class="car-hero__spec-value">{{ car.mileage_km|intcomma }} км</div>
+                            <div class="car-hero__spec-label">Пробег</div>
+                        </div>
+                    </div>
+
+                    <div class="car-hero__spec-card">
+                        <div class="car-hero__spec-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                <path d="M13 10V3L4 14h7v7l9-11h-7z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <div class="car-hero__spec-content">
+                            <div class="car-hero__spec-value">{{ car.engine_volume|default:"—" }}</div>
+                            <div class="car-hero__spec-label">Двигатель</div>
+                        </div>
+                    </div>
+
+                    <div class="car-hero__spec-card">
+                        <div class="car-hero__spec-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                <path d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2 2z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M8 5a2 2 0 012-2h4a2 2 0 012 2v0a2 2 0 01-2 2H10a2 2 0 01-2-2z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <div class="car-hero__spec-content">
+                            <div class="car-hero__spec-value">{{ car.fuel|default:"—" }}</div>
+                            <div class="car-hero__spec-label">Топливо</div>
+                        </div>
+                    </div>
+
+                    <div class="car-hero__spec-card">
+                        <div class="car-hero__spec-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                <path d="M19 9l-7 7-7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <div class="car-hero__spec-content">
+                            <div class="car-hero__spec-value">{{ car.body_type|default:"—" }}</div>
+                            <div class="car-hero__spec-label">Кузов</div>
+                        </div>
+                    </div>
+
+                    <div class="car-hero__spec-card">
+                        <div class="car-hero__spec-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                <path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <div class="car-hero__spec-content">
+                            <div class="car-hero__spec-value">{{ car.drive|default:"—" }}</div>
+                            <div class="car-hero__spec-label">Привод</div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div class="car-hero__price-block">
-                <div class="car-hero__price">{{ car.price|floatformat:0|intcomma }} ₽</div>
-                <div class="car-hero__actions">
-                    <a href="#" class="btn btn--calc car-hero__btn" data-open-modal="request">ОСТАВИТЬ ЗАЯВКУ</a>
-                </div>
+            <!-- Цена и действия -->
+            
             </div>
         </div>
 
         <div class="car-hero__right" aria-hidden="true">
-            <!-- Главное фото -->
+            <!-- Премиум фотогалерея -->
             <div class="car-hero__gallery">
-                <div class="car-hero__main-photo">
-                    {% if car.get_all_images %}
-                        {% for image in car.get_all_images %}
-                            {% if image.is_main %}
-                                <div class="car-hero__main-photo-item" data-image="{{ image.image.url }}" data-alt="{{ image.alt_text|default:car.name }}">
-                                    <img src="{{ image.image.url }}" alt="{{ image.alt_text|default:car.name }}" class="car-hero__main-photo-img">
-                                    <div class="car-hero__zoom-icon">
-                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                                            <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2"/>
-                                            <path d="m21 21-4.35-4.35" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                                            <circle cx="11" cy="11" r="3" stroke="currentColor" stroke-width="2"/>
-                                        </svg>
-                                    </div>
-
-                                    <!-- Стрелки навигации -->
-                                    {% if car.get_all_images %}
-                                        <button class="car-hero__photo-nav car-hero__photo-nav--prev" type="button" aria-label="Предыдущее фото">
-                                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                                                <path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                            </svg>
-                                        </button>
-                                        <button class="car-hero__photo-nav car-hero__photo-nav--next" type="button" aria-label="Следующее фото">
-                                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                                                <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                            </svg>
-                                        </button>
-                                    {% endif %}
-
-                                    <!-- Индикатор фото -->
-                                    {% if car.get_all_images %}
-                                        <div class="car-hero__photo-indicator">
-                                            <span class="car-hero__photo-current">1</span>
-                                            <span class="car-hero__photo-separator">/</span>
-                                            <span class="car-hero__photo-total">{{ car.get_all_images|length }}</span>
-                                        </div>
-                                    {% endif %}
-                                </div>
-                            {% endif %}
-                        {% endfor %}
-                    {% else %}
-                        <div class="car-hero__main-photo-item" data-image="{% static 'images/placeholder-car.jpg' %}" data-alt="{{ car.name }}">
-                            <img src="{% static 'images/placeholder-car.jpg' %}" alt="{{ car.name }}" class="car-hero__main-photo-img">
-                            <div class="car-hero__zoom-icon">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                                    <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2"/>
-                                    <path d="m21 21-4.35-4.35" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                                    <circle cx="11" cy="11" r="3" stroke="currentColor" stroke-width="2"/>
-                                </svg>
-                            </div>
-                        </div>
-                    {% endif %}
-                </div>
-
-                <!-- Миниатюры -->
-                <div class="car-hero__thumbnails-container">
-                    <div class="car-hero__thumbnails-header">
-                        <h3 class="car-hero__thumbnails-title">Все фотографии</h3>
-                        <span class="car-hero__thumbnails-count">
-                            {% if car.get_all_images %}
-                                {{ car.get_all_images|length }} фото
-                            {% else %}
-                                1 фото
-                            {% endif %}
-                        </span>
-                    </div>
-                    <div class="car-hero__thumbnails-wrapper">
-                        <div class="car-hero__thumbnails">
+                <!-- Основная галерея -->
+                <div class="car-gallery">
+                    <!-- Главное фото с эффектами -->
+                    <div class="car-gallery__main">
+                        <div class="car-gallery__main-wrapper">
                             {% if car.get_all_images %}
                                 {% for image in car.get_all_images %}
-                                    <div class="car-hero__thumbnail-item {% if image.is_main %}car-hero__thumbnail-item--active{% endif %}" data-image="{{ image.image.url }}" data-alt="{{ image.alt_text|default:car.name }}">
-                                        <img src="{{ image.image.url }}" alt="{{ image.alt_text|default:car.name }}" class="car-hero__thumbnail-img">
-                                        
-                                    </div>
+                                    {% if image.is_main %}
+                                        <div class="car-gallery__slide car-gallery__slide--active"
+                                             data-image="{{ image.image.url }}"
+                                             data-alt="{{ image.alt_text|default:car.name }}">
+                                            <div class="car-gallery__image-container">
+                                                <img src="{{ image.image.url }}"
+                                                     alt="{{ image.alt_text|default:car.name }}"
+                                                     class="car-gallery__image">
+                                                <div class="car-gallery__overlay"></div>
+
+                                                <!-- Эффект увеличения -->
+                                                <button class="car-gallery__zoom-btn" type="button" aria-label="Увеличить фото">
+                                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                        <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2"/>
+                                                        <path d="m21 21-4.35-4.35" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                                        <circle cx="11" cy="11" r="3" stroke="currentColor" stroke-width="2"/>
+                                                    </svg>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    {% endif %}
                                 {% endfor %}
+
+                                <!-- Дополнительные слайды -->
+                                {% for image in car.get_all_images %}
+                                    {% if not image.is_main %}
+                                        <div class="car-gallery__slide"
+                                             data-image="{{ image.image.url }}"
+                                             data-alt="{{ image.alt_text|default:car.name }}">
+                                            <div class="car-gallery__image-container">
+                                                <img src="{{ image.image.url }}"
+                                                     alt="{{ image.alt_text|default:car.name }}"
+                                                     class="car-gallery__image">
+                                                <div class="car-gallery__overlay"></div>
+
+                                                <button class="car-gallery__zoom-btn" type="button" aria-label="Увеличить фото">
+                                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                        <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2"/>
+                                                        <path d="m21 21-4.35-4.35" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                                        <circle cx="11" cy="11" r="3" stroke="currentColor" stroke-width="2"/>
+                                                    </svg>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            {% else %}
+                                <div class="car-gallery__slide car-gallery__slide--active">
+                                    <div class="car-gallery__image-container">
+                                        <img src="{% static 'images/placeholder-car.jpg' %}"
+                                             alt="{{ car.name }}"
+                                             class="car-gallery__image">
+                                        <div class="car-gallery__overlay"></div>
+
+                                        <button class="car-gallery__zoom-btn" type="button" aria-label="Увеличить фото">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2"/>
+                                                <path d="m21 21-4.35-4.35" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                                <circle cx="11" cy="11" r="3" stroke="currentColor" stroke-width="2"/>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </div>
                             {% endif %}
                         </div>
+
+                        <!-- Навигация галереи -->
+                        {% if car.get_all_images and car.get_all_images|length > 1 %}
+                            <div class="car-gallery__navigation">
+                                <button class="car-gallery__nav-btn car-gallery__nav-btn--prev" type="button" aria-label="Предыдущее фото">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                        <path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </button>
+
+                                <div class="car-gallery__indicators">
+                                    {% for image in car.get_all_images %}
+                                        <button class="car-gallery__indicator {% if image.is_main %}car-gallery__indicator--active{% endif %}"
+                                                type="button"
+                                                data-slide="{{ forloop.counter0 }}"
+                                                aria-label="Фото {{ forloop.counter }}">
+                                            <span class="car-gallery__indicator-dot"></span>
+                                        </button>
+                                    {% endfor %}
+                                </div>
+
+                                <button class="car-gallery__nav-btn car-gallery__nav-btn--next" type="button" aria-label="Следующее фото">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                        <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        {% endif %}
+
+                        <!-- Счетчик фото -->
+                        {% if car.get_all_images and car.get_all_images|length > 1 %}
+                            <div class="car-gallery__counter">
+                                <span class="car-gallery__counter-current">1</span>
+                                <span class="car-gallery__counter-separator">/</span>
+                                <span class="car-gallery__counter-total">{{ car.get_all_images|length }}</span>
+                            </div>
+                        {% endif %}
                     </div>
 
-                    <!-- Навигационные стрелки -->
-                    {% if car.get_all_images|length > 4 %}
-                        <button class="car-hero__nav-btn car-hero__nav-btn--prev" type="button">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                                <path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                        </button>
-                        <button class="car-hero__nav-btn car-hero__nav-btn--next" type="button">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                                <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                        </button>
+                    <!-- Панель миниатюр -->
+                    {% if car.get_all_images and car.get_all_images|length > 1 %}
+                        <div class="car-gallery__thumbnails">
+                            <div class="car-gallery__thumbnails-header">
+                                <div class="car-gallery__thumbnails-info">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2" stroke="currentColor" stroke-width="2"/>
+                                        <circle cx="9" cy="9" r="2" stroke="currentColor" stroke-width="2"/>
+                                        <path d="m21 15-3.086-3.086a2 2 0 00-2.828 0L6 21" stroke="currentColor" stroke-width="2"/>
+                                    </svg>
+                                    <span class="car-gallery__thumbnails-title">Галерея автомобиля</span>
+                                </div>
+                                <span class="car-gallery__thumbnails-count">{{ car.get_all_images|length }} фото</span>
+                            </div>
+
+                            <div class="car-gallery__thumbnails-wrapper">
+                                <div class="car-gallery__thumbnails-track">
+                                    {% for image in car.get_all_images %}
+                                        <button class="car-gallery__thumbnail {% if image.is_main %}car-gallery__thumbnail--active{% endif %}"
+                                                type="button"
+                                                data-slide="{{ forloop.counter0 }}"
+                                                aria-label="Показать фото {{ forloop.counter }}">
+                                            <div class="car-gallery__thumbnail-image">
+                                                <img src="{{ image.image.url }}"
+                                                     alt="{{ image.alt_text|default:car.name }}"
+                                                     loading="lazy">
+                                                {% if image.is_main %}
+                                                    <div class="car-gallery__thumbnail-badge">
+                                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+                                                            <path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                                                        </svg>
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                        </button>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
                     {% endif %}
                 </div>
             </div>
         </div>
     </div>
 </section>
+
+<!-- Премиум модальное окно для просмотра фото -->
+<div class="photo-modal">
+    <div class="photo-modal__overlay"></div>
+    <div class="photo-modal__content">
+        <!-- Кнопки навигации -->
+        <button class="photo-modal__nav photo-modal__nav--prev" type="button" aria-label="Предыдущее фото">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </button>
+        <button class="photo-modal__nav photo-modal__nav--next" type="button" aria-label="Следующее фото">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </button>
+
+        <!-- Кнопка закрытия -->
+        <button class="photo-modal__close" type="button" aria-label="Закрыть">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </button>
+
+        <!-- Изображение -->
+        <img src="" alt="" class="photo-modal__image">
+
+        <!-- Счетчик -->
+        <div class="photo-modal__counter">
+            <span class="photo-modal__counter-current">1</span>
+            <span class="photo-modal__counter-separator">/</span>
+            <span class="photo-modal__counter-total">1</span>
+        </div>
+    </div>
+</div>
 
 <!-- Популярные модели -->
 {% if popular_cars %}
@@ -156,14 +356,16 @@
             <p class="popular-models__subtitle">Самые востребованные автомобили в нашем каталоге</p>
 
             <div class="popular-models__grid">
-                {% for popular_car in popular_cars %}
+                {% for popular_car in popular_cars|slice:":4" %}
                     <article class="car-card">
                         <div class="car-card__img-wrap">
-                            {% if popular_car.get_image_url %}
-                                <img src="{{ popular_car.get_image_url }}" alt="{{ popular_car.name }}" class="car-card__img">
-                            {% else %}
-                                <img src="{% static 'images/placeholder-car.jpg' %}" alt="{{ popular_car.name }}" class="car-card__img">
-                            {% endif %}
+                            {% with image_url=popular_car.get_image_url %}
+                                {% if image_url %}
+                                    <img src="{{ image_url }}" alt="{{ popular_car.name }}" class="car-card__img">
+                                {% else %}
+                                    <img src="{% static 'images/placeholder-car.jpg' %}" alt="{{ popular_car.name }}" class="car-card__img">
+                                {% endif %}
+                            {% endwith %}
                         </div>
                         <div class="car-card__body">
                             <p class="car-card__pub">Номер публикации #{{ forloop.counter|add:1000 }}</p>
@@ -437,6 +639,258 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     }
+});
+
+// ================== PREMIUM CAR GALLERY FUNCTIONALITY ==================
+document.addEventListener('DOMContentLoaded', function() {
+    const gallery = {
+        currentSlide: 0,
+        slides: [],
+        thumbnails: [],
+        indicators: [],
+
+        init() {
+            this.slides = Array.from(document.querySelectorAll('.car-gallery__slide'));
+            this.thumbnails = Array.from(document.querySelectorAll('.car-gallery__thumbnail'));
+            this.indicators = Array.from(document.querySelectorAll('.car-gallery__indicator'));
+            this.counter = document.querySelector('.car-gallery__counter-current');
+
+            if (this.slides.length === 0) return;
+
+            this.bindEvents();
+            this.updateUI();
+        },
+
+        bindEvents() {
+            // Навигация кнопками
+            const prevBtn = document.querySelector('.car-gallery__nav-btn--prev');
+            const nextBtn = document.querySelector('.car-gallery__nav-btn--next');
+
+            if (prevBtn) {
+                prevBtn.addEventListener('click', () => this.prevSlide());
+            }
+            if (nextBtn) {
+                nextBtn.addEventListener('click', () => this.nextSlide());
+            }
+
+            // Навигация индикаторами
+            this.indicators.forEach((indicator, index) => {
+                indicator.addEventListener('click', () => this.goToSlide(index));
+            });
+
+            // Навигация миниатюрами
+            this.thumbnails.forEach((thumbnail, index) => {
+                thumbnail.addEventListener('click', () => this.goToSlide(index));
+            });
+
+            // Клавиатурная навигация
+            document.addEventListener('keydown', (e) => {
+                if (document.querySelector('.photo-modal--open')) return;
+
+                if (e.key === 'ArrowLeft') {
+                    e.preventDefault();
+                    this.prevSlide();
+                } else if (e.key === 'ArrowRight') {
+                    e.preventDefault();
+                    this.nextSlide();
+                }
+            });
+
+            // Кнопки увеличения
+            document.querySelectorAll('.car-gallery__zoom-btn').forEach((btn, index) => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    this.openModal(index);
+                });
+            });
+
+            // Автопрокрутка миниатюр
+            this.setupThumbnailScroll();
+        },
+
+        prevSlide() {
+            this.goToSlide(this.currentSlide > 0 ? this.currentSlide - 1 : this.slides.length - 1);
+        },
+
+        nextSlide() {
+            this.goToSlide(this.currentSlide < this.slides.length - 1 ? this.currentSlide + 1 : 0);
+        },
+
+        goToSlide(index) {
+            if (index === this.currentSlide) return;
+
+            // Анимация перехода
+            this.slides[this.currentSlide].classList.remove('car-gallery__slide--active');
+            this.slides[index].classList.add('car-gallery__slide--active');
+
+            // Обновление миниатюр
+            this.thumbnails.forEach((thumb, i) => {
+                thumb.classList.toggle('car-gallery__thumbnail--active', i === index);
+            });
+
+            // Обновление индикаторов
+            this.indicators.forEach((indicator, i) => {
+                indicator.classList.toggle('car-gallery__indicator--active', i === index);
+            });
+
+            // Обновление счетчика
+            if (this.counter) {
+                this.counter.textContent = index + 1;
+            }
+
+            this.currentSlide = index;
+            this.scrollThumbnailIntoView();
+        },
+
+        scrollThumbnailIntoView() {
+            const activeThumbnail = this.thumbnails[this.currentSlide];
+            if (activeThumbnail) {
+                activeThumbnail.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'nearest',
+                    inline: 'center'
+                });
+            }
+        },
+
+        setupThumbnailScroll() {
+            const track = document.querySelector('.car-gallery__thumbnails-track');
+            if (!track) return;
+
+            let isScrolling = false;
+
+            track.addEventListener('scroll', () => {
+                if (!isScrolling) {
+                    clearTimeout(isScrolling);
+                    isScrolling = setTimeout(() => {
+                        // Можно добавить дополнительную логику при прокрутке
+                        isScrolling = false;
+                    }, 100);
+                }
+            });
+        },
+
+        openModal(index) {
+            const modal = document.querySelector('.photo-modal');
+            const modalImage = document.querySelector('.photo-modal__image');
+            const modalCounter = document.querySelector('.photo-modal__counter-current');
+            const modalTotal = document.querySelector('.photo-modal__counter-total');
+
+            if (!modal || !modalImage) return;
+
+            const imageSrc = this.slides[index].dataset.image;
+            const imageAlt = this.slides[index].dataset.alt;
+
+            modalImage.src = imageSrc;
+            modalImage.alt = imageAlt;
+
+            if (modalCounter) modalCounter.textContent = index + 1;
+            if (modalTotal) modalTotal.textContent = this.slides.length;
+
+            // Предотвращаем скролл body при открытии модального окна
+            document.body.style.overflow = 'hidden';
+
+            modal.classList.add('photo-modal--open');
+
+            // Привязываем навигацию в модальном окне
+            this.setupModalNavigation(index);
+        },
+
+        setupModalNavigation(startIndex) {
+            let currentModalIndex = startIndex;
+
+            const modal = document.querySelector('.photo-modal');
+            const prevBtn = document.querySelector('.photo-modal__nav--prev');
+            const nextBtn = document.querySelector('.photo-modal__nav--next');
+            const closeBtn = document.querySelector('.photo-modal__close');
+            const modalImage = document.querySelector('.photo-modal__image');
+            const modalCounter = document.querySelector('.photo-modal__counter-current');
+
+            const updateModalImage = (index) => {
+                const imageSrc = this.slides[index].dataset.image;
+                const imageAlt = this.slides[index].dataset.alt;
+
+                modalImage.src = imageSrc;
+                modalImage.alt = imageAlt;
+                if (modalCounter) modalCounter.textContent = index + 1;
+
+                currentModalIndex = index;
+            };
+
+            if (prevBtn) {
+                prevBtn.addEventListener('click', () => {
+                    const newIndex = currentModalIndex > 0 ? currentModalIndex - 1 : this.slides.length - 1;
+                    updateModalImage(newIndex);
+                });
+            }
+
+            if (nextBtn) {
+                nextBtn.addEventListener('click', () => {
+                    const newIndex = currentModalIndex < this.slides.length - 1 ? currentModalIndex + 1 : 0;
+                    updateModalImage(newIndex);
+                });
+            }
+
+            const closeModal = () => {
+                modal.classList.remove('photo-modal--open');
+                // Восстанавливаем скролл body
+                document.body.style.overflow = '';
+            };
+
+            if (closeBtn) {
+                closeBtn.addEventListener('click', closeModal);
+            }
+
+            // Закрытие по клику на overlay
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal.querySelector('.photo-modal__overlay')) {
+                    closeModal();
+                }
+            });
+
+            // Клавиатурная навигация в модальном окне
+            const handleKeydown = (e) => {
+                if (!modal.classList.contains('photo-modal--open')) return;
+
+                if (e.key === 'ArrowLeft') {
+                    e.preventDefault();
+                    const newIndex = currentModalIndex > 0 ? currentModalIndex - 1 : this.slides.length - 1;
+                    updateModalImage(newIndex);
+                } else if (e.key === 'ArrowRight') {
+                    e.preventDefault();
+                    const newIndex = currentModalIndex < this.slides.length - 1 ? currentModalIndex + 1 : 0;
+                    updateModalImage(newIndex);
+                } else if (e.key === 'Escape') {
+                    closeModal();
+                }
+            };
+
+            document.addEventListener('keydown', handleKeydown);
+
+            // Очистка обработчиков при закрытии модального окна
+            modal.addEventListener('transitionend', () => {
+                if (!modal.classList.contains('photo-modal--open')) {
+                    document.removeEventListener('keydown', handleKeydown);
+                }
+            });
+        },
+
+        updateUI() {
+            // Инициализация активного состояния
+            this.slides.forEach((slide, index) => {
+                if (slide.classList.contains('car-gallery__slide--active')) {
+                    this.currentSlide = index;
+                }
+            });
+
+            if (this.counter) {
+                this.counter.textContent = this.currentSlide + 1;
+            }
+        }
+    };
+
+    // Инициализация галереи
+    gallery.init();
 });
 </script>
 

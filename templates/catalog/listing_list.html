@@ -1,0 +1,291 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}Каталог автомобилей — AkibaAuto{% endblock %}
+
+{% block content %}
+<section class="popular" id="catalog">
+    <div class="container">
+        <h1 class="popular__title">Каталог автомобилей</h1>
+        <div class="popular__box">
+            <div class="popular__filters">
+                <form method="get" action="{% url 'catalog:listing_list' %}" class="popular__filters-form" id="filterForm">
+                    <div class="popular__filters-left">
+                        <!-- Марка -->
+                        <div class="filter-select-wrapper">
+                            <select name="brand" class="filter-select" id="brandSelect">
+                                <option value="">Марка</option>
+                                {% for brand in brands %}
+                                    <option value="{{ brand.pk }}" {% if selected_brand == brand.pk|stringformat:"d" %}selected{% endif %}>
+                                        {{ brand.name }} ({{ brand.count }})
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        
+                        <!-- Год выпуска -->
+                        <div class="filter-select-wrapper filter-select-wrapper--range">
+                            <select name="year_from" class="filter-select" id="yearFromSelect">
+                                <option value="">Год от</option>
+                                {% for year in years %}
+                                    <option value="{{ year }}" {% if selected_year_from == year|stringformat:"d" %}selected{% endif %}>{{ year }}</option>
+                                {% endfor %}
+                            </select>
+                            <span class="filter-select__divider">—</span>
+                            <select name="year_to" class="filter-select" id="yearToSelect">
+                                <option value="">До</option>
+                                {% for year in years %}
+                                    <option value="{{ year }}" {% if selected_year_to == year|stringformat:"d" %}selected{% endif %}>{{ year }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        
+                        <!-- Цена -->
+                        <div class="filter-select-wrapper filter-select-wrapper--range">
+                            <input 
+                                type="number" 
+                                name="price_from" 
+                                class="filter-input" 
+                                placeholder="Цена от"
+                                value="{{ selected_price_from }}"
+                                min="0"
+                                step="100000"
+                            >
+                            <span class="filter-select__divider">—</span>
+                            <input 
+                                type="number" 
+                                name="price_to" 
+                                class="filter-input" 
+                                placeholder="До"
+                                value="{{ selected_price_to }}"
+                                min="0"
+                                step="100000"
+                            >
+                        </div>
+                        
+                        <!-- Поиск -->
+                        <div class="filter-select-wrapper">
+                            <input 
+                                type="text" 
+                                name="q" 
+                                class="filter-input filter-input--search" 
+                                placeholder="Поиск..."
+                                value="{{ search_query }}"
+                            >
+                        </div>
+                        
+                        {% if selected_brand or selected_year_from or selected_year_to or selected_price_from or selected_price_to or search_query %}
+                            <a href="{% url 'catalog:listing_list' %}" class="filter-reset" title="Сбросить фильтры">✕</a>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Сортировка -->
+                    <div class="popular__filters-right">
+                        <select name="sort" class="filter-select filter-select--sort" id="sortSelect">
+                            <option value="-created_at" {% if sort == '-created_at' %}selected{% endif %}>Сначала новые</option>
+                            <option value="created_at" {% if sort == 'created_at' %}selected{% endif %}>Сначала старые</option>
+                            <option value="price_rub" {% if sort == 'price_rub' %}selected{% endif %}>Цена ↑</option>
+                            <option value="-price_rub" {% if sort == '-price_rub' %}selected{% endif %}>Цена ↓</option>
+                            <option value="-year" {% if sort == '-year' %}selected{% endif %}>Год ↓</option>
+                            <option value="year" {% if sort == 'year' %}selected{% endif %}>Год ↑</option>
+                            <option value="mileage_km" {% if sort == 'mileage_km' %}selected{% endif %}>Пробег ↑</option>
+                        </select>
+                    </div>
+                </form>
+                
+                {% if paginator %}
+                    <span class="muted">Найдено: {{ paginator.count }}</span>
+                {% else %}
+                    <span class="muted">Найдено: {{ listings|length }}</span>
+                {% endif %}
+            </div>
+
+            <div class="popular__cards">
+                {% for listing in listings %}
+                    <article class="car-card">
+                        <div class="car-card__img-wrap">
+                            {% with main_photo=listing.get_main_photo %}
+                                {% if main_photo %}
+                                    <img src="{{ main_photo.image.url }}" alt="{{ listing.title }}" class="car-card__img" loading="lazy">
+                                {% else %}
+                                    <img src="{% static 'images/placeholder-car.jpg' %}" alt="{{ listing.title }}" class="car-card__img">
+                                {% endif %}
+                            {% endwith %}
+                            
+                            {% if listing.is_featured %}
+                                <span class="car-card__badge car-card__badge--featured">Рекомендуем</span>
+                            {% endif %}
+                        </div>
+                        <div class="car-card__body">
+                            <p class="car-card__pub">
+                                {{ listing.get_source_type_display }}
+                                {% if listing.source_type == 'telegram' %}
+                                    <span class="car-card__source-icon">📱</span>
+                                {% endif %}
+                            </p>
+                            <h3 class="car-card__title">{{ listing.title }}</h3>
+
+                            <div class="car-card__row">
+                                <div class="car-card__col">
+                                    <span class="car-card__label">Марка</span>
+                                    <span class="car-card__value">{{ listing.get_brand_display|default:"-" }}</span>
+                                </div>
+                                <div class="car-card__col">
+                                    <span class="car-card__label">Год выпуска</span>
+                                    <span class="car-card__value">{{ listing.year|default:"-" }}</span>
+                                </div>
+                            </div>
+
+                            <div class="car-card__row">
+                                <div class="car-card__col">
+                                    <span class="car-card__label">Пробег</span>
+                                    <span class="car-card__value">
+                                        {% if listing.mileage_km %}
+                                            {{ listing.mileage_km|intcomma }} км
+                                        {% else %}
+                                            -
+                                        {% endif %}
+                                    </span>
+                                </div>
+                                <div class="car-card__col">
+                                    <span class="car-card__label">Двигатель</span>
+                                    <span class="car-card__value">
+                                        {% if listing.engine_volume_l %}
+                                            {{ listing.engine_volume_l }} л{% if listing.turbo %}T{% endif %}
+                                            {% if listing.horsepower %}/ {{ listing.horsepower }} л.с.{% endif %}
+                                        {% else %}
+                                            -
+                                        {% endif %}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="car-card__divider"></div>
+
+                            <div class="car-card__price-row">
+                                <div>
+                                    <span class="car-card__label">Стоимость:</span>
+                                    <p class="car-card__price">
+                                        {% if listing.price_rub %}
+                                            {{ listing.price_rub|intcomma }} ₽
+                                            {% if listing.price_negotiable %}
+                                                <span class="car-card__price-note">торг</span>
+                                            {% endif %}
+                                        {% else %}
+                                            По запросу
+                                        {% endif %}
+                                    </p>
+                                </div>
+
+                                <a class="btn car-card__btn" href="{% url 'catalog:listing_detail' listing.pk %}">
+                                    Подробнее
+                                </a>
+                            </div>
+                        </div>
+                    </article>
+                {% empty %}
+                    <div class="popular__empty">
+                        <p class="muted">По вашему запросу ничего не найдено.</p>
+                        <a href="{% url 'catalog:listing_list' %}" class="btn btn--secondary">Сбросить фильтры</a>
+                    </div>
+                {% endfor %}
+            </div>
+
+            {% if page_obj and paginator.num_pages > 1 %}
+            <nav class="pagination" aria-label="Пагинация каталога">
+                <div class="pagination__inner">
+                    {% if page_obj.has_previous %}
+                        <a href="?page={{ page_obj.previous_page_number }}{% if selected_brand %}&brand={{ selected_brand }}{% endif %}{% if sort %}&sort={{ sort }}{% endif %}" 
+                           class="pagination__link pagination__link--prev">
+                            &laquo; Назад
+                        </a>
+                    {% endif %}
+
+                    <span class="pagination__info">
+                        Страница {{ page_obj.number }} из {{ paginator.num_pages }}
+                    </span>
+
+                    {% if page_obj.has_next %}
+                        <a href="?page={{ page_obj.next_page_number }}{% if selected_brand %}&brand={{ selected_brand }}{% endif %}{% if sort %}&sort={{ sort }}{% endif %}" 
+                           class="pagination__link pagination__link--next">
+                            Вперёд &raquo;
+                        </a>
+                    {% endif %}
+                </div>
+            </nav>
+            {% endif %}
+        </div>
+        
+        <!-- Сайдбар с популярными -->
+        {% if popular_listings %}
+        <aside class="catalog-sidebar">
+            <div class="catalog-sidebar__section">
+                <h3 class="catalog-sidebar__title">🔥 Популярные</h3>
+                <div class="catalog-sidebar__list">
+                    {% for popular in popular_listings %}
+                    <a href="{% url 'catalog:listing_detail' popular.pk %}" class="catalog-sidebar__item">
+                        <div class="catalog-sidebar__thumb">
+                            {% with photo=popular.get_main_photo %}
+                                {% if photo %}
+                                    <img src="{{ photo.image.url }}" alt="{{ popular.title }}">
+                                {% endif %}
+                            {% endwith %}
+                        </div>
+                        <div class="catalog-sidebar__info">
+                            <span class="catalog-sidebar__name">{{ popular.title|truncatechars:25 }}</span>
+                            {% if popular.price_rub %}
+                            <span class="catalog-sidebar__price">{{ popular.price_rub|intcomma }} ₽</span>
+                            {% endif %}
+                            <span class="catalog-sidebar__views">{{ popular.views_count }} просмотров</span>
+                        </div>
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </aside>
+        {% endif %}
+    </div>
+</section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const filterForm = document.getElementById('filterForm');
+    const selects = filterForm.querySelectorAll('select');
+    
+    // Автоматическая отправка при изменении select'ов
+    selects.forEach(select => {
+        select.addEventListener('change', function() {
+            submitForm();
+        });
+    });
+    
+    // Отправка при Enter в input'ах
+    const inputs = filterForm.querySelectorAll('input');
+    inputs.forEach(input => {
+        input.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                submitForm();
+            }
+        });
+    });
+    
+    function submitForm() {
+        const formData = new FormData(filterForm);
+        formData.delete('page');
+        
+        const params = new URLSearchParams();
+        formData.forEach((value, key) => {
+            if (value) {
+                params.append(key, value);
+            }
+        });
+        
+        const newUrl = '{% url "catalog:listing_list" %}' + (params.toString() ? '?' + params.toString() : '');
+        window.location.href = newUrl;
+    }
+});
+</script>
+{% endblock %}
+

@@ -1,0 +1,629 @@
+/* ================== AKIBA AUTO ADMIN ================== */
+/* Стили точно как в основном проекте */
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap');
+
+/* ================== БАЗА ================== */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif !important;
+}
+
+body {
+    margin: 0;
+    font-family: 'Montserrat', sans-serif !important;
+    background: #131313 !important;
+    color: #f5f5f5 !important;
+    min-height: 100vh;
+}
+
+a {
+    color: #ec1d25;
+    text-decoration: none;
+    transition: 0.18s ease;
+}
+
+a:hover {
+    filter: brightness(1.2);
+}
+
+/* ================== ШАПКА ================== */
+#header {
+    background: rgba(11, 12, 15, 0.7) !important;
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+    padding: 0 !important;
+}
+
+#branding {
+    padding: 14px 20px;
+}
+
+#branding h1 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+}
+
+#branding h1 a {
+    color: #fff !important;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+#branding h1 a:hover {
+    color: #ec1d25 !important;
+}
+
+#branding h1 img {
+    height: 40px;
+}
+
+#user-tools {
+    padding: 14px 20px;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 13px;
+}
+
+#user-tools a {
+    color: #f5f5f5 !important;
+}
+
+#user-tools a:hover {
+    color: #ec1d25 !important;
+}
+
+/* ================== КОНТЕНТ ================== */
+#content {
+    background: #131313;
+    padding: 24px;
+}
+
+#content h1 {
+    color: #f5f5f5;
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+/* ================== ХЛЕБНЫЕ КРОШКИ ================== */
+.breadcrumbs {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 14px 18px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 13px;
+}
+
+.breadcrumbs a {
+    color: #ec1d25 !important;
+}
+
+/* ================== МОДУЛИ/КАРТОЧКИ ================== */
+.module {
+    background: #1a1a1a !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    border-radius: 10px !important;
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+
+.module h2, .module caption {
+    background: #ec1d25 !important;
+    color: #fff !important;
+    padding: 14px 18px !important;
+    margin: 0 !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    border: none !important;
+}
+
+.module table {
+    background: transparent;
+    width: 100%;
+}
+
+.module td, .module th {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 12px 18px;
+    color: #f5f5f5;
+}
+
+.module th {
+    color: rgba(255, 255, 255, 0.5);
+    font-weight: 600;
+    font-size: 12px;
+}
+
+.module a {
+    color: #ec1d25;
+}
+
+/* ================== ТАБЛИЦЫ ================== */
+#result_list {
+    background: #1a1a1a;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    overflow: hidden;
+}
+
+#result_list table {
+    background: transparent;
+}
+
+#result_list thead th {
+    background: rgba(255, 255, 255, 0.03) !important;
+    color: rgba(255, 255, 255, 0.5) !important;
+    padding: 14px 18px;
+    font-weight: 600;
+    font-size: 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+#result_list thead th a {
+    color: rgba(255, 255, 255, 0.5) !important;
+}
+
+#result_list thead th.sorted {
+    background: rgba(236, 29, 37, 0.1) !important;
+}
+
+#result_list thead th.sorted a {
+    color: #ec1d25 !important;
+}
+
+#result_list tbody tr {
+    transition: 0.18s ease;
+}
+
+#result_list tbody tr:hover {
+    background: rgba(255, 255, 255, 0.03) !important;
+}
+
+#result_list tbody td {
+    padding: 14px 18px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    color: #f5f5f5;
+}
+
+#result_list tbody td a {
+    color: #ec1d25;
+    font-weight: 500;
+}
+
+/* ================== КНОПКИ ================== */
+.button, input[type=submit], input[type=button], .submit-row input, a.button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 20px !important;
+    border-radius: 10px !important;
+    font-size: 15px !important;
+    font-weight: 600 !important;
+    border: 1px solid transparent !important;
+    transition: 0.18s ease !important;
+    cursor: pointer;
+    background: #ec1d25 !important;
+    color: #fff !important;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+}
+
+.button:hover, input[type=submit]:hover, input[type=button]:hover, 
+.submit-row input:hover, a.button:hover {
+    filter: brightness(1.05);
+    transform: translateY(-1px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+}
+
+.button:active, input[type=submit]:active, input[type=button]:active {
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+/* Кнопка удаления */
+.deletelink, a.deletelink {
+    background: transparent !important;
+    color: #ec1d25 !important;
+    border: 1px solid rgba(236, 29, 37, 0.5) !important;
+}
+
+.deletelink:hover, a.deletelink:hover {
+    background: rgba(236, 29, 37, 0.1) !important;
+    border-color: #ec1d25 !important;
+}
+
+/* Object tools */
+.object-tools a {
+    background: transparent !important;
+    border: 1px solid rgba(255, 255, 255, 0.24) !important;
+    color: #fff !important;
+    border-radius: 10px !important;
+    padding: 10px 16px !important;
+    font-size: 13px !important;
+    backdrop-filter: blur(6px);
+}
+
+.object-tools a:hover {
+    border-color: #ec1d25 !important;
+    color: #ec1d25 !important;
+}
+
+/* ================== ФОРМЫ ================== */
+fieldset {
+    background: #1a1a1a;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    border-radius: 10px !important;
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+
+fieldset h2 {
+    background: rgba(255, 255, 255, 0.05) !important;
+    color: #f5f5f5 !important;
+    padding: 14px 18px !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    margin: 0 !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+fieldset .description {
+    color: rgba(255, 255, 255, 0.5);
+    padding: 12px 18px;
+    background: rgba(255, 255, 255, 0.02);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    font-size: 13px;
+}
+
+.form-row {
+    padding: 14px 18px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.form-row:last-child {
+    border-bottom: none;
+}
+
+.form-row label {
+    color: #f5f5f5 !important;
+    font-weight: 500;
+    font-size: 13px;
+}
+
+.form-row .help {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 12px;
+    margin-top: 6px;
+}
+
+/* ================== ПОЛЯ ВВОДА ================== */
+input[type=text], input[type=password], input[type=email], input[type=url], 
+input[type=number], input[type=date], input[type=datetime-local], 
+input[type=time], input[type=tel], textarea, select {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    border-radius: 12px !important;
+    padding: 16px 18px !important;
+    color: #ffffff !important;
+    font-size: 15px !important;
+    font-weight: 400;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    width: 100%;
+    max-width: 600px;
+}
+
+input[type=text]:focus, input[type=password]:focus, input[type=email]:focus, 
+input[type=url]:focus, input[type=number]:focus, input[type=date]:focus, 
+input[type=datetime-local]:focus, input[type=time]:focus, input[type=tel]:focus,
+textarea:focus, select:focus {
+    outline: none !important;
+    border-color: rgba(236, 29, 37, 0.6) !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+    box-shadow: 0 0 0 3px rgba(236, 29, 37, 0.1), 0 4px 12px rgba(0, 0, 0, 0.2) !important;
+}
+
+input[type=text]:hover:not(:focus), input[type=password]:hover:not(:focus), 
+textarea:hover:not(:focus), select:hover:not(:focus) {
+    border-color: rgba(255, 255, 255, 0.25) !important;
+    background: rgba(255, 255, 255, 0.06) !important;
+}
+
+input::placeholder, textarea::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+/* Select */
+select {
+    appearance: none !important;
+    background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L6 6L11 1' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
+    background-repeat: no-repeat !important;
+    background-position: right 18px center !important;
+    padding-right: 40px !important;
+    cursor: pointer;
+}
+
+select option {
+    background: #1a1a1a;
+    color: #ffffff;
+    padding: 10px;
+}
+
+/* Checkbox */
+input[type=checkbox] {
+    width: 20px !important;
+    height: 20px !important;
+    accent-color: #ec1d25;
+    cursor: pointer;
+}
+
+/* ================== ФИЛЬТРЫ ================== */
+#changelist-filter {
+    background: #1a1a1a !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    border-radius: 10px !important;
+    overflow: hidden;
+}
+
+#changelist-filter h2 {
+    background: #ec1d25 !important;
+    color: #fff !important;
+    padding: 14px 18px !important;
+    margin: 0 !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+}
+
+#changelist-filter h3 {
+    color: #f5f5f5 !important;
+    font-size: 12px !important;
+    font-weight: 600;
+    padding: 14px 18px 8px;
+    margin: 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+#changelist-filter ul {
+    margin: 0;
+    padding: 0 18px 14px;
+}
+
+#changelist-filter li {
+    padding: 6px 0;
+    list-style: none;
+}
+
+#changelist-filter li a {
+    color: rgba(255, 255, 255, 0.6) !important;
+    font-size: 13px;
+}
+
+#changelist-filter li a:hover {
+    color: #ec1d25 !important;
+}
+
+#changelist-filter li.selected a {
+    color: #ec1d25 !important;
+    font-weight: 600;
+}
+
+/* ================== СООБЩЕНИЯ ================== */
+.messagelist {
+    margin: 0 0 20px;
+    padding: 0;
+}
+
+.messagelist li {
+    padding: 14px 18px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    list-style: none;
+    border: 1px solid;
+}
+
+.messagelist li.success {
+    background: rgba(40, 167, 69, 0.1);
+    color: #28a745;
+    border-color: rgba(40, 167, 69, 0.3);
+}
+
+.messagelist li.warning {
+    background: rgba(255, 193, 7, 0.1);
+    color: #ffc107;
+    border-color: rgba(255, 193, 7, 0.3);
+}
+
+.messagelist li.error {
+    background: rgba(236, 29, 37, 0.1);
+    color: #ec1d25;
+    border-color: rgba(236, 29, 37, 0.3);
+}
+
+/* ================== ПАГИНАЦИЯ ================== */
+.paginator {
+    background: #1a1a1a;
+    padding: 14px 18px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 13px;
+}
+
+.paginator a {
+    color: #f5f5f5 !important;
+    padding: 8px 12px;
+    border-radius: 6px;
+    transition: 0.18s ease;
+}
+
+.paginator a:hover {
+    background: #ec1d25;
+    color: #fff !important;
+}
+
+.paginator .this-page {
+    background: #ec1d25;
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 6px;
+}
+
+/* ================== INLINE ================== */
+.inline-group {
+    background: #1a1a1a;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+
+.inline-group h2 {
+    background: rgba(255, 255, 255, 0.05) !important;
+    color: #f5f5f5 !important;
+    padding: 14px 18px !important;
+    font-size: 14px !important;
+    font-weight: 600;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.inline-related h3 {
+    background: rgba(255, 255, 255, 0.02);
+    padding: 12px 18px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 13px;
+}
+
+/* ================== SUBMIT ROW ================== */
+.submit-row {
+    background: #1a1a1a !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    border-radius: 10px !important;
+    padding: 18px !important;
+    margin-top: 20px;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+/* ================== ACTIONS ================== */
+#changelist .actions {
+    background: #1a1a1a;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin-bottom: 16px;
+}
+
+#changelist .actions label {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 13px;
+}
+
+#changelist .actions select {
+    max-width: 300px;
+}
+
+/* ================== COLLAPSED ================== */
+fieldset.collapsed,
+fieldset.collapse,
+.collapsed,
+.collapse {
+    background: #1a1a1a !important;
+}
+
+fieldset.collapsed h2,
+fieldset.collapse h2 {
+    background: rgba(236, 29, 37, 0.1) !important;
+    color: #f5f5f5 !important;
+}
+
+/* ================== ERRORS ================== */
+.errorlist {
+    background: rgba(236, 29, 37, 0.1);
+    border: 1px solid rgba(236, 29, 37, 0.3);
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin: 8px 0;
+    color: #ec1d25;
+}
+
+.errorlist li {
+    list-style: none;
+    font-size: 13px;
+}
+
+/* ================== REQUIRED ================== */
+.required label:after {
+    content: " *";
+    color: #ec1d25;
+}
+
+/* ================== HELP ================== */
+.help, p.help {
+    color: rgba(255, 255, 255, 0.5) !important;
+    font-size: 12px;
+}
+
+/* ================== CALENDAR ================== */
+.calendarbox, .clockbox {
+    background: #1a1a1a !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    border-radius: 10px !important;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+}
+
+.calendar caption {
+    background: #ec1d25 !important;
+    color: #fff !important;
+}
+
+.calendar td a {
+    color: #f5f5f5 !important;
+}
+
+.calendar td a:hover {
+    background: #ec1d25 !important;
+    color: #fff !important;
+}
+
+/* ================== RESPONSIVE ================== */
+@media (max-width: 768px) {
+    #branding {
+        padding: 12px 16px;
+    }
+    
+    #branding h1 {
+        font-size: 16px;
+    }
+    
+    #content {
+        padding: 16px;
+    }
+    
+    .button, input[type=submit], input[type=button] {
+        padding: 10px 16px !important;
+        font-size: 13px !important;
+    }
+    
+    input[type=text], input[type=password], input[type=email], 
+    textarea, select {
+        padding: 14px 16px !important;
+        font-size: 14px !important;
+    }
+}

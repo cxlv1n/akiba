@@ -1,0 +1,116 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_urls static %}
+
+{% block title %}Импорт из Telegram — {{ site_title }}{% endblock %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+    <a href="{% url 'admin:index' %}">Главная</a>
+    &rsaquo; <a href="{% url 'admin:catalog_carlisting_changelist' %}">Каталог автомобилей</a>
+    &rsaquo; Импорт из Telegram
+</div>
+{% endblock %}
+
+{% block content %}
+<div style="max-width: 600px; margin: 0 auto;">
+    <h1 style="margin-bottom: 20px;">Импорт из Telegram канала</h1>
+    
+    <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+        <h3 style="margin-top: 0;">Как это работает:</h3>
+        <ol style="margin-bottom: 0; padding-left: 20px;">
+            <li>Подключаемся к Telegram через MTProto API</li>
+            <li>Загружаем новые сообщения из канала</li>
+            <li>Парсим текст постов для извлечения данных об авто</li>
+            <li>Создаём карточки в статусе "Черновик" или "На проверке"</li>
+            <li>Загружаем фото из постов</li>
+        </ol>
+    </div>
+    
+    <div style="background: #fff3cd; padding: 15px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #ffc107;">
+        <strong>⚠️ Внимание:</strong> Для работы импорта необходимо настроить переменные окружения:
+        <ul style="margin-bottom: 0; margin-top: 10px;">
+            <li><code>TELEGRAM_API_ID</code></li>
+            <li><code>TELEGRAM_API_HASH</code></li>
+            <li><code>TELEGRAM_SESSION_STRING</code> (опционально)</li>
+        </ul>
+        <p style="margin-bottom: 0; margin-top: 10px;">
+            Получить API ключи можно на <a href="https://my.telegram.org" target="_blank">my.telegram.org</a>
+        </p>
+    </div>
+    
+    <form method="post" action="{% url 'admin:catalog_carlisting_import_telegram' %}">
+        {% csrf_token %}
+        
+        <div style="margin-bottom: 15px;">
+            <label for="channel" style="display: block; margin-bottom: 5px; font-weight: bold;">
+                Канал (без @):
+            </label>
+            <input 
+                type="text" 
+                name="channel" 
+                id="channel" 
+                value="akibaautovl"
+                style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;"
+            >
+        </div>
+        
+        <div style="margin-bottom: 20px;">
+            <label for="limit" style="display: block; margin-bottom: 5px; font-weight: bold;">
+                Лимит сообщений (пусто = все новые):
+            </label>
+            <input 
+                type="number" 
+                name="limit" 
+                id="limit" 
+                min="1" 
+                max="1000"
+                placeholder="100"
+                style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;"
+            >
+        </div>
+        
+        <div style="display: flex; gap: 10px;">
+            <button 
+                type="submit" 
+                style="
+                    background: #417690; 
+                    color: white; 
+                    padding: 12px 24px; 
+                    border: none; 
+                    border-radius: 4px; 
+                    cursor: pointer; 
+                    font-size: 14px;
+                    font-weight: bold;
+                "
+            >
+                🚀 Запустить импорт
+            </button>
+            
+            <a 
+                href="{% url 'admin:catalog_carlisting_changelist' %}" 
+                style="
+                    background: #6c757d; 
+                    color: white; 
+                    padding: 12px 24px; 
+                    border: none; 
+                    border-radius: 4px; 
+                    text-decoration: none;
+                    font-size: 14px;
+                "
+            >
+                Отмена
+            </a>
+        </div>
+    </form>
+    
+    <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd;">
+        <h3>Последние импорты</h3>
+        <p>
+            <a href="{% url 'admin:catalog_importrun_changelist' %}">
+                Посмотреть логи импорта →
+            </a>
+        </p>
+    </div>
+</div>
+{% endblock %}
+

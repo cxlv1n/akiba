@@ -1,0 +1,452 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}{{ listing.title }} — AkibaAuto{% endblock %}
+
+{% block content %}
+
+<!-- Hero секция с автомобилем -->
+<section class="car-hero" aria-labelledby="car-hero-title">
+    <div class="car-hero__bg" aria-hidden="true"></div>
+    <div class="container car-hero__content">
+        <div class="car-hero__left">
+            <nav class="breadcrumb">
+                <a href="{% url 'pages:home' %}" class="breadcrumb__link">Главная</a>
+                <span class="breadcrumb__separator">/</span>
+                <a href="{% url 'catalog:listing_list' %}" class="breadcrumb__link">Каталог</a>
+                <span class="breadcrumb__separator">/</span>
+                <span class="breadcrumb__current">{{ listing.title }}</span>
+            </nav>
+
+            <h1 class="car-hero__title" id="car-hero-title">
+                {{ listing.title }}
+                {% if listing.year %}
+                <span class="car-hero__year">{{ listing.year }} года</span>
+                {% endif %}
+            </h1>
+
+            <div class="car-hero__specs">
+                {% if listing.body_type %}
+                <div class="car-hero__spec">
+                    <span class="car-hero__spec-text">{{ listing.body_type }}</span>
+                </div>
+                {% endif %}
+                {% if listing.engine_volume_l %}
+                <div class="car-hero__spec">
+                    <span class="car-hero__spec-text">
+                        {{ listing.engine_volume_l }} л{% if listing.turbo %}T{% endif %}
+                        {% if listing.horsepower %}/ {{ listing.horsepower }} л.с.{% endif %}
+                    </span>
+                </div>
+                {% endif %}
+                {% if listing.mileage_km %}
+                <div class="car-hero__spec">
+                    <span class="car-hero__spec-text">{{ listing.mileage_km|intcomma }} км</span>
+                </div>
+                {% endif %}
+                {% if listing.fuel_type %}
+                <div class="car-hero__spec">
+                    <span class="car-hero__spec-text">{{ listing.fuel_type }}</span>
+                </div>
+                {% endif %}
+                {% if listing.transmission %}
+                <div class="car-hero__spec">
+                    <span class="car-hero__spec-text">{{ listing.transmission }}</span>
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="car-hero__price-block">
+                <div class="car-hero__price">
+                    {% if listing.price_rub %}
+                        {{ listing.price_rub|intcomma }} ₽
+                        {% if listing.price_negotiable %}
+                        <span class="car-hero__price-note">торг уместен</span>
+                        {% endif %}
+                    {% else %}
+                        Цена по запросу
+                    {% endif %}
+                </div>
+                <div class="car-hero__actions">
+                    <a href="#" class="btn btn--calc car-hero__btn" data-open-modal="request">ОСТАВИТЬ ЗАЯВКУ</a>
+                </div>
+            </div>
+            
+            <!-- Дополнительная информация -->
+            {% if listing.condition_text or listing.city %}
+            <div class="car-hero__extra">
+                {% if listing.condition_text %}
+                <div class="car-hero__extra-item">
+                    <span class="car-hero__extra-label">Состояние:</span>
+                    <span class="car-hero__extra-value">{{ listing.condition_text }}</span>
+                </div>
+                {% endif %}
+                {% if listing.city %}
+                <div class="car-hero__extra-item">
+                    <span class="car-hero__extra-label">📍</span>
+                    <span class="car-hero__extra-value">{{ listing.city }}</span>
+                </div>
+                {% endif %}
+            </div>
+            {% endif %}
+            
+            <!-- Источник -->
+            {% if listing.source_url %}
+            <div class="car-hero__source">
+                <span class="car-hero__source-label">Источник:</span>
+                <a href="{{ listing.source_url }}" target="_blank" class="car-hero__source-link">
+                    {% if listing.source_type == 'telegram' %}📱 Telegram{% else %}{{ listing.source_url|truncatechars:30 }}{% endif %}
+                </a>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="car-hero__right" aria-hidden="true">
+            <!-- Главное фото -->
+            <div class="car-hero__gallery">
+                <div class="car-hero__main-photo">
+                    {% with photos=listing.photos.all %}
+                        {% if photos %}
+                            {% with main_photo=listing.get_main_photo %}
+                                <div class="car-hero__main-photo-item" data-image="{{ main_photo.image.url }}" data-alt="{{ main_photo.alt|default:listing.title }}">
+                                    <img src="{{ main_photo.image.url }}" alt="{{ main_photo.alt|default:listing.title }}" class="car-hero__main-photo-img">
+                                    <div class="car-hero__zoom-icon">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                            <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2"/>
+                                            <path d="m21 21-4.35-4.35" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                            <circle cx="11" cy="11" r="3" stroke="currentColor" stroke-width="2"/>
+                                        </svg>
+                                    </div>
+
+                                    {% if photos|length > 1 %}
+                                        <button class="car-hero__photo-nav car-hero__photo-nav--prev" type="button" aria-label="Предыдущее фото">
+                                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                                <path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                            </svg>
+                                        </button>
+                                        <button class="car-hero__photo-nav car-hero__photo-nav--next" type="button" aria-label="Следующее фото">
+                                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                                <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                            </svg>
+                                        </button>
+                                    {% endif %}
+
+                                    <div class="car-hero__photo-indicator">
+                                        <span class="car-hero__photo-current">1</span>
+                                        <span class="car-hero__photo-separator">/</span>
+                                        <span class="car-hero__photo-total">{{ photos|length }}</span>
+                                    </div>
+                                </div>
+                            {% endwith %}
+                        {% else %}
+                            <div class="car-hero__main-photo-item" data-image="{% static 'images/placeholder-car.jpg' %}" data-alt="{{ listing.title }}">
+                                <img src="{% static 'images/placeholder-car.jpg' %}" alt="{{ listing.title }}" class="car-hero__main-photo-img">
+                            </div>
+                        {% endif %}
+                    {% endwith %}
+                </div>
+
+                <!-- Миниатюры -->
+                {% with photos=listing.photos.all %}
+                {% if photos|length > 1 %}
+                <div class="car-hero__thumbnails-container">
+                    <div class="car-hero__thumbnails-header">
+                        <h3 class="car-hero__thumbnails-title">Все фотографии</h3>
+                        <span class="car-hero__thumbnails-count">{{ photos|length }} фото</span>
+                    </div>
+                    <div class="car-hero__thumbnails-wrapper">
+                        <div class="car-hero__thumbnails">
+                            {% for photo in photos %}
+                                <div class="car-hero__thumbnail-item {% if photo.is_main %}car-hero__thumbnail-item--active{% endif %}" 
+                                     data-image="{{ photo.image.url }}" 
+                                     data-alt="{{ photo.alt|default:listing.title }}">
+                                    <img src="{{ photo.image.url }}" alt="{{ photo.alt|default:listing.title }}" class="car-hero__thumbnail-img">
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    {% if photos|length > 4 %}
+                        <button class="car-hero__nav-btn car-hero__nav-btn--prev" type="button">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                <path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                        <button class="car-hero__nav-btn car-hero__nav-btn--next" type="button">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                    {% endif %}
+                </div>
+                {% endif %}
+                {% endwith %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Описание (если есть) -->
+{% if listing.description %}
+<section class="car-description">
+    <div class="container">
+        <h2 class="car-description__title">Описание</h2>
+        <div class="car-description__text">
+            {{ listing.description|linebreaks }}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Похожие и популярные модели -->
+{% if similar_listings %}
+<section class="popular-models-section">
+    <div class="container">
+        <div class="popular-models__inner">
+            <h2 class="popular-models__title">Похожие автомобили</h2>
+            <p class="popular-models__subtitle">Популярные модели по количеству просмотров</p>
+
+            <div class="popular-models__grid">
+                {% for similar in similar_listings %}
+                    <article class="car-card">
+                        <div class="car-card__img-wrap">
+                            {% with photo=similar.get_main_photo %}
+                                {% if photo %}
+                                    <img src="{{ photo.image.url }}" alt="{{ similar.title }}" class="car-card__img" loading="lazy">
+                                {% else %}
+                                    <img src="{% static 'images/placeholder-car.jpg' %}" alt="{{ similar.title }}" class="car-card__img">
+                                {% endif %}
+                            {% endwith %}
+                        </div>
+                        <div class="car-card__body">
+                            <p class="car-card__pub">{{ similar.get_source_type_display }}</p>
+                            <h3 class="car-card__title">{{ similar.title }}</h3>
+
+                            <div class="car-card__row">
+                                <div class="car-card__col">
+                                    <span class="car-card__label">Марка</span>
+                                    <span class="car-card__value">{{ similar.get_brand_display|default:"-" }}</span>
+                                </div>
+                                <div class="car-card__col">
+                                    <span class="car-card__label">Год выпуска</span>
+                                    <span class="car-card__value">{{ similar.year|default:"-" }}</span>
+                                </div>
+                            </div>
+
+                            <div class="car-card__row">
+                                <div class="car-card__col">
+                                    <span class="car-card__label">Пробег</span>
+                                    <span class="car-card__value">
+                                        {% if similar.mileage_km %}{{ similar.mileage_km|intcomma }} км{% else %}-{% endif %}
+                                    </span>
+                                </div>
+                                <div class="car-card__col">
+                                    <span class="car-card__label">Двигатель</span>
+                                    <span class="car-card__value">
+                                        {% if similar.engine_volume_l %}
+                                            {{ similar.engine_volume_l }} л{% if similar.turbo %}T{% endif %}
+                                        {% else %}
+                                            -
+                                        {% endif %}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="car-card__divider"></div>
+
+                            <div class="car-card__price-row">
+                                <div>
+                                    <span class="car-card__label">Стоимость:</span>
+                                    <p class="car-card__price">
+                                        {% if similar.price_rub %}
+                                            {{ similar.price_rub|intcomma }} ₽
+                                        {% else %}
+                                            По запросу
+                                        {% endif %}
+                                    </p>
+                                </div>
+
+                                <a class="btn car-card__btn" href="{% url 'catalog:listing_detail' similar.pk %}">
+                                    Подробнее
+                                </a>
+                            </div>
+                        </div>
+                    </article>
+                {% endfor %}
+            </div>
+
+            <div class="popular-models__actions">
+                <a href="{% url 'catalog:listing_list' %}" class="btn btn--primary">Посмотреть все модели</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+
+<!-- Модальное окно для просмотра фото -->
+<div class="photo-modal" id="photoModal">
+    <div class="photo-modal__overlay" id="photoModalOverlay"></div>
+    <div class="photo-modal__content">
+        <button class="photo-modal__close" id="photoModalClose">&times;</button>
+        <img class="photo-modal__image" id="photoModalImage" src="" alt="">
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const modal = document.getElementById('photoModal');
+    const modalImage = document.getElementById('photoModalImage');
+    const modalClose = document.getElementById('photoModalClose');
+    const modalOverlay = document.getElementById('photoModalOverlay');
+
+    function openModal(imageSrc, imageAlt) {
+        modalImage.src = imageSrc;
+        modalImage.alt = imageAlt;
+        modal.classList.add('photo-modal--open');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+        modal.classList.remove('photo-modal--open');
+        document.body.style.overflow = '';
+    }
+
+    const mainPhotoItems = document.querySelectorAll('.car-hero__main-photo-item');
+    mainPhotoItems.forEach(item => {
+        item.addEventListener('click', function() {
+            openModal(this.dataset.image, this.dataset.alt);
+        });
+    });
+
+    if (modalClose) modalClose.addEventListener('click', closeModal);
+    if (modalOverlay) modalOverlay.addEventListener('click', closeModal);
+
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape' && modal.classList.contains('photo-modal--open')) {
+            closeModal();
+        }
+    });
+
+    // Навигация по фото
+    const mainPhotoImg = document.querySelector('.car-hero__main-photo-img');
+    const mainPhotoItem = document.querySelector('.car-hero__main-photo-item');
+    const thumbnailItems = document.querySelectorAll('.car-hero__thumbnail-item');
+    const photoPrevBtn = document.querySelector('.car-hero__photo-nav--prev');
+    const photoNextBtn = document.querySelector('.car-hero__photo-nav--next');
+    const photoCurrent = document.querySelector('.car-hero__photo-current');
+
+    const images = Array.from(thumbnailItems).map(item => ({
+        src: item.dataset.image,
+        alt: item.dataset.alt,
+        element: item
+    }));
+
+    let currentPhotoIndex = 0;
+
+    function updateMainPhoto(index) {
+        if (!images[index] || !mainPhotoImg || !mainPhotoItem) return;
+
+        currentPhotoIndex = index;
+
+        mainPhotoImg.style.opacity = '0.7';
+        mainPhotoImg.style.transform = 'scale(0.98)';
+
+        setTimeout(() => {
+            mainPhotoImg.src = images[index].src;
+            mainPhotoImg.alt = images[index].alt;
+            mainPhotoItem.dataset.image = images[index].src;
+            mainPhotoItem.dataset.alt = images[index].alt;
+
+            mainPhotoImg.style.opacity = '1';
+            mainPhotoImg.style.transform = 'scale(1)';
+        }, 100);
+
+        thumbnailItems.forEach((thumb, i) => {
+            thumb.classList.toggle('car-hero__thumbnail-item--active', i === index);
+        });
+
+        if (photoCurrent) {
+            photoCurrent.textContent = index + 1;
+        }
+
+        const activeThumbnail = thumbnailItems[index];
+        if (activeThumbnail) {
+            activeThumbnail.scrollIntoView({
+                behavior: 'smooth',
+                block: 'nearest',
+                inline: 'center'
+            });
+        }
+    }
+
+    if (photoPrevBtn && photoNextBtn) {
+        photoPrevBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const newIndex = currentPhotoIndex > 0 ? currentPhotoIndex - 1 : images.length - 1;
+            updateMainPhoto(newIndex);
+        });
+
+        photoNextBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const newIndex = currentPhotoIndex < images.length - 1 ? currentPhotoIndex + 1 : 0;
+            updateMainPhoto(newIndex);
+        });
+    }
+
+    document.addEventListener('keydown', function(event) {
+        if (modal.classList.contains('photo-modal--open')) return;
+
+        if (event.key === 'ArrowLeft') {
+            event.preventDefault();
+            const newIndex = currentPhotoIndex > 0 ? currentPhotoIndex - 1 : images.length - 1;
+            updateMainPhoto(newIndex);
+        } else if (event.key === 'ArrowRight') {
+            event.preventDefault();
+            const newIndex = currentPhotoIndex < images.length - 1 ? currentPhotoIndex + 1 : 0;
+            updateMainPhoto(newIndex);
+        }
+    });
+
+    thumbnailItems.forEach((item, index) => {
+        item.addEventListener('click', function() {
+            updateMainPhoto(index);
+        });
+    });
+
+    // Навигация по миниатюрам
+    const thumbnailsContainer = document.querySelector('.car-hero__thumbnails');
+    const prevBtn = document.querySelector('.car-hero__nav-btn--prev');
+    const nextBtn = document.querySelector('.car-hero__nav-btn--next');
+
+    if (prevBtn && nextBtn && thumbnailsContainer) {
+        const scrollAmount = 120;
+
+        prevBtn.addEventListener('click', function() {
+            thumbnailsContainer.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+        });
+
+        nextBtn.addEventListener('click', function() {
+            thumbnailsContainer.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+        });
+    }
+
+    // Инициализация
+    const activeThumbnail = document.querySelector('.car-hero__thumbnail-item--active');
+    if (activeThumbnail) {
+        const activeIndex = Array.from(thumbnailItems).indexOf(activeThumbnail);
+        if (activeIndex !== -1) {
+            currentPhotoIndex = activeIndex;
+            if (photoCurrent) {
+                photoCurrent.textContent = currentPhotoIndex + 1;
+            }
+        }
+    }
+});
+</script>
+
+{% endblock %}
+

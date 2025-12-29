@@ -10,44 +10,175 @@
         <h1 class="popular__title">Каталог автомобилей</h1>
         <div class="popular__box">
             <div class="popular__filters">
+                <div class="filter-controls">
+                    <button type="button" class="filter-toggle-btn" id="filterToggleBtn" aria-expanded="false">
+                        <span class="filter-toggle-btn__text">Фильтры</span>
+                        <svg class="filter-toggle-btn__icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+
+                    <div class="sort-dropdown">
+                        <button type="button" class="sort-toggle-btn" id="sortToggleBtn">
+                            <span class="sort-toggle-btn__text">
+                                {% if selected_sort == "price_asc" %}Цена: по возрастанию
+                                {% elif selected_sort == "price_desc" %}Цена: по убыванию
+                                {% elif selected_sort == "year_desc" %}Год: новее
+                                {% elif selected_sort == "year_asc" %}Год: старше
+                                {% elif selected_sort == "mileage_asc" %}Пробег: меньше
+                                {% elif selected_sort == "mileage_desc" %}Пробег: больше
+                                {% else %}Сортировка{% endif %}
+                            </span>
+                            <svg class="sort-toggle-btn__icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                        <div class="sort-dropdown-menu" id="sortDropdownMenu">
+                            <button type="button" class="sort-option" data-sort="">
+                                <span class="sort-option__text">По умолчанию</span>
+                                {% if not selected_sort %}<span class="sort-option__check">✓</span>{% endif %}
+                            </button>
+                            <button type="button" class="sort-option" data-sort="price_asc">
+                                <span class="sort-option__text">Цена: по возрастанию</span>
+                                {% if selected_sort == "price_asc" %}<span class="sort-option__check">✓</span>{% endif %}
+                            </button>
+                            <button type="button" class="sort-option" data-sort="price_desc">
+                                <span class="sort-option__text">Цена: по убыванию</span>
+                                {% if selected_sort == "price_desc" %}<span class="sort-option__check">✓</span>{% endif %}
+                            </button>
+                            <button type="button" class="sort-option" data-sort="year_desc">
+                                <span class="sort-option__text">Год: новее</span>
+                                {% if selected_sort == "year_desc" %}<span class="sort-option__check">✓</span>{% endif %}
+                            </button>
+                            <button type="button" class="sort-option" data-sort="year_asc">
+                                <span class="sort-option__text">Год: старше</span>
+                                {% if selected_sort == "year_asc" %}<span class="sort-option__check">✓</span>{% endif %}
+                            </button>
+                            <button type="button" class="sort-option" data-sort="mileage_asc">
+                                <span class="sort-option__text">Пробег: меньше</span>
+                                {% if selected_sort == "mileage_asc" %}<span class="sort-option__check">✓</span>{% endif %}
+                            </button>
+                            <button type="button" class="sort-option" data-sort="mileage_desc">
+                                <span class="sort-option__text">Пробег: больше</span>
+                                {% if selected_sort == "mileage_desc" %}<span class="sort-option__check">✓</span>{% endif %}
+                            </button>
+                        </div>
+                    </div>
+
+                    {% if selected_origin or selected_manufacturer or selected_model or selected_fuel or selected_body_type or selected_drive or selected_mileage_from or selected_mileage_to or selected_price_from or selected_price_to or selected_engine_volume_from or selected_engine_volume_to or selected_year_from or selected_year_to or selected_sort %}
+                        <a href="{% url 'catalog:list' %}" class="btn btn--secondary filter-reset-btn">Сбросить</a>
+                    {% endif %}
+                </div>
                 <form method="get" action="{% url 'catalog:list' %}" class="popular__filters-form" id="filterForm">
-                    <div class="popular__filters-left">
-                        <div class="filter-select-wrapper">
+                    <div class="popular__filters-grid">
+                        <div class="filter-group">
+                            <label class="filter-label">Авто из:</label>
+                            <select name="origin" class="filter-select" id="originSelect">
+                                <option value="">Все</option>
+                                <option value="CN" {% if selected_origin == "CN" %}selected{% endif %}>Китай</option>
+                                <option value="JP" {% if selected_origin == "JP" %}selected{% endif %}>Япония</option>
+                                <option value="KR" {% if selected_origin == "KR" %}selected{% endif %}>Корея</option>
+                            </select>
+                        </div>
+
+                        <div class="filter-group">
+                            <label class="filter-label">Марка автомобиля</label>
                             <select name="manufacturer" class="filter-select" id="manufacturerSelect">
-                                <option value="">Марка</option>
+                                <option value="">Все марки</option>
                                 {% for m in manufacturers %}
                                     <option value="{{ m }}" {% if selected_manufacturer == m %}selected{% endif %}>{{ m }}</option>
                                 {% endfor %}
                             </select>
                         </div>
-                        <div class="filter-select-wrapper">
-                            <select name="model" class="filter-select" id="modelSelect">
-                                <option value="">Модель</option>
-                                {% for m in models %}
-                                    <option value="{{ m }}" {% if selected_model == m %}selected{% endif %}>{{ m }}</option>
+
+                        <div class="filter-group">
+                            <label class="filter-label">Двигатель</label>
+                            <select name="fuel" class="filter-select" id="fuelSelect">
+                                <option value="">Все</option>
+                                {% for f in fuels %}
+                                    <option value="{{ f }}" {% if selected_fuel == f %}selected{% endif %}>{{ f }}</option>
                                 {% endfor %}
                             </select>
                         </div>
-                        <div class="filter-select-wrapper filter-select-wrapper--range">
-                            <select name="year_from" class="filter-select" id="yearFromSelect">
-                                <option value="">Год от</option>
-                                {% for year in years %}
-                                    <option value="{{ year }}" {% if selected_year_from == year|stringformat:"d" %}selected{% endif %}>{{ year }}</option>
-                                {% endfor %}
-                            </select>
-                            <span class="filter-select__divider">—</span>
-                            <select name="year_to" class="filter-select" id="yearToSelect">
-                                <option value="">До</option>
-                                {% for year in years %}
-                                    <option value="{{ year }}" {% if selected_year_to == year|stringformat:"d" %}selected{% endif %}>{{ year }}</option>
+
+                        <div class="filter-group">
+                            <label class="filter-label">Кузов</label>
+                            <select name="body_type" class="filter-select" id="bodyTypeSelect">
+                                <option value="">Все</option>
+                                {% for bt in body_types %}
+                                    <option value="{{ bt }}" {% if selected_body_type == bt %}selected{% endif %}>{{ bt }}</option>
                                 {% endfor %}
                             </select>
                         </div>
-                        {% if selected_manufacturer or selected_model or selected_year_from or selected_year_to %}
-                            <a href="{% url 'catalog:list' %}" class="filter-reset" title="Сбросить фильтры">✕</a>
-                        {% endif %}
+
+                        <div class="filter-group">
+                            <label class="filter-label">Привод</label>
+                            <select name="drive" class="filter-select" id="driveSelect">
+                                <option value="">Все</option>
+                                {% for d in drives %}
+                                    <option value="{{ d }}" {% if selected_drive == d %}selected{% endif %}>{{ d }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="filter-group filter-group--range">
+                            <label class="filter-label">Пробег, км</label>
+                            <div class="filter-range">
+                                <input type="number" name="mileage_from" class="filter-input" id="mileageFrom"
+                                       value="{{ selected_mileage_from }}" placeholder="от" min="0">
+                                <span class="filter-range__divider">—</span>
+                                <input type="number" name="mileage_to" class="filter-input" id="mileageTo"
+                                       value="{{ selected_mileage_to }}" placeholder="до" min="0">
+                            </div>
+                        </div>
+
+                        <div class="filter-group filter-group--range">
+                            <label class="filter-label">Цена, р</label>
+                            <div class="filter-range">
+                                <input type="number" name="price_from" class="filter-input" id="priceFrom"
+                                       value="{{ selected_price_from }}" placeholder="от" min="0" step="1000">
+                                <span class="filter-range__divider">—</span>
+                                <input type="number" name="price_to" class="filter-input" id="priceTo"
+                                       value="{{ selected_price_to }}" placeholder="до" min="0" step="1000">
+                            </div>
+                        </div>
+
+                        <div class="filter-group filter-group--range">
+                            <label class="filter-label">Объем</label>
+                            <div class="filter-range">
+                                <input type="number" name="engine_volume_from" class="filter-input" id="engineVolumeFrom"
+                                       value="{{ selected_engine_volume_from }}" placeholder="от" min="0" step="0.1">
+                                <span class="filter-range__divider">—</span>
+                                <input type="number" name="engine_volume_to" class="filter-input" id="engineVolumeTo"
+                                       value="{{ selected_engine_volume_to }}" placeholder="до" min="0" step="0.1">
+                            </div>
+                        </div>
+
+                        <div class="filter-group filter-group--range">
+                            <label class="filter-label">Год</label>
+                            <div class="filter-range">
+                                <select name="year_from" class="filter-select" id="yearFromSelect">
+                                    <option value="">от</option>
+                                    {% for year in years %}
+                                        <option value="{{ year }}" {% if selected_year_from == year|stringformat:"d" %}selected{% endif %}>{{ year }}</option>
+                                    {% endfor %}
+                                </select>
+                                <span class="filter-range__divider">—</span>
+                                <select name="year_to" class="filter-select" id="yearToSelect">
+                                    <option value="">до</option>
+                                    {% for year in years %}
+                                        <option value="{{ year }}" {% if selected_year_to == year|stringformat:"d" %}selected{% endif %}>{{ year }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="popular__filters-actions">
+                        <button type="submit" class="btn btn--primary">Применить фильтры</button>
                     </div>
                 </form>
+
                 {% if sample %}
                     <span class="muted">Показаны примеры. Добавьте реальные авто через админку.</span>
                 {% elif paginator %}
@@ -138,49 +269,111 @@
 </section>
 
 <script>
-  // Автоматическая отправка формы при изменении фильтров
+  // Обработка фильтров и сортировки
   document.addEventListener('DOMContentLoaded', function() {
     const filterForm = document.getElementById('filterForm');
+    const filterToggleBtn = document.getElementById('filterToggleBtn');
     const manufacturerSelect = document.getElementById('manufacturerSelect');
     const modelSelect = document.getElementById('modelSelect');
-    const selects = filterForm.querySelectorAll('.filter-select');
-    
+
+    // Переключение видимости фильтров
+    if (filterToggleBtn && filterForm) {
+      filterToggleBtn.addEventListener('click', function() {
+        const isExpanded = filterForm.classList.toggle('filter-form--expanded');
+        filterToggleBtn.setAttribute('aria-expanded', isExpanded);
+        filterToggleBtn.classList.toggle('filter-toggle-btn--active', isExpanded);
+      });
+    }
+
+    // Вспомогательная функция для переключения выпадающих меню
+    function toggleDropdown(button, menu, menuClass, buttonClass) {
+      const isOpen = menu.classList.contains(menuClass);
+
+      // Закрываем все открытые меню
+      document.querySelectorAll(`.${menuClass}`).forEach(openMenu => {
+        openMenu.classList.remove(menuClass);
+      });
+      document.querySelectorAll(`.${buttonClass}`).forEach(activeBtn => {
+        activeBtn.classList.remove(buttonClass);
+      });
+
+      // Переключаем текущее меню
+      menu.classList.toggle(menuClass, !isOpen);
+      button.classList.toggle(buttonClass, !isOpen);
+    }
+
+    // Переключение выпадающего меню сортировки
+    const sortToggleBtn = document.getElementById('sortToggleBtn');
+    const sortDropdownMenu = document.getElementById('sortDropdownMenu');
+
+    if (sortToggleBtn && sortDropdownMenu) {
+      sortToggleBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        toggleDropdown(sortToggleBtn, sortDropdownMenu, 'sort-dropdown-menu--open', 'sort-toggle-btn--active');
+      });
+
+      // Обработка кликов по опциям сортировки
+      sortDropdownMenu.addEventListener('click', function(e) {
+        if (e.target.classList.contains('sort-option') || e.target.closest('.sort-option')) {
+          e.preventDefault();
+          const option = e.target.classList.contains('sort-option') ? e.target : e.target.closest('.sort-option');
+          const sortValue = option.dataset.sort;
+
+          // Создаем URL с новым параметром сортировки
+          const url = new URL(window.location);
+          if (sortValue) {
+            url.searchParams.set('sort', sortValue);
+          } else {
+            url.searchParams.delete('sort');
+          }
+
+          // Перенаправляем на новую страницу
+          window.location.href = url.toString();
+        }
+      });
+    }
+
     // При изменении марки сбрасываем модель
-    if (manufacturerSelect) {
+    if (manufacturerSelect && modelSelect) {
       manufacturerSelect.addEventListener('change', function() {
-        if (modelSelect) {
-          modelSelect.value = '';
-        }
-        submitForm();
+        modelSelect.value = '';
       });
     }
-    
-    // Для остальных фильтров просто отправляем форму
-    selects.forEach(select => {
-      if (select !== manufacturerSelect) {
-        select.addEventListener('change', function() {
-          submitForm();
+
+    // Обработка отправки формы
+    if (filterForm) {
+      filterForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        // Удаляем пустые поля из формы
+        const formData = new FormData(filterForm);
+        const params = new URLSearchParams();
+
+        formData.forEach((value, key) => {
+          if (value && value.trim() !== '') {
+            params.append(key, value);
+          }
         });
-      }
-    });
-    
-    function submitForm() {
-      // Удаляем параметр page при изменении фильтров
-      const formData = new FormData(filterForm);
-      formData.delete('page');
-      
-      // Строим новый URL
-      const params = new URLSearchParams();
-      formData.forEach((value, key) => {
-        if (value) {
-          params.append(key, value);
+
+        // Перенаправляем на новую страницу с фильтрами
+        const newUrl = '{% url "catalog:list" %}' + (params.toString() ? '?' + params.toString() : '');
+        window.location.href = newUrl;
+      });
+    }
+
+    // Закрываем все меню при клике вне их
+    document.addEventListener('click', function(e) {
+      const openMenus = document.querySelectorAll('.sort-dropdown-menu--open');
+      const activeButtons = document.querySelectorAll('.sort-toggle-btn--active');
+
+      openMenus.forEach(menu => {
+        const button = menu.previousElementSibling;
+        if (!button.contains(e.target) && !menu.contains(e.target)) {
+          menu.classList.remove('sort-dropdown-menu--open');
+          button.classList.remove('sort-toggle-btn--active');
         }
       });
-      
-      // Перенаправляем на новую страницу с фильтрами
-      const newUrl = '{% url "catalog:list" %}' + (params.toString() ? '?' + params.toString() : '');
-      window.location.href = newUrl;
-    }
+    });
   });
 </script>
 {% endblock %}

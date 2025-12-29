@@ -7,22 +7,47 @@ class Car(models.Model):
         CHINA = "CN", "Китай"
         JAPAN = "JP", "Япония"
         KOREA = "KR", "Корея"
+    
+    class Availability(models.TextChoices):
+        IN_STOCK = "in_stock", "В наличии"
+        ON_ORDER = "on_order", "Под заказ"
+        SOLD = "sold", "Продано"
 
-    name = models.CharField(max_length=200)
-    manufacturer = models.CharField(max_length=100)
-    model = models.CharField(max_length=100)
-    year = models.PositiveIntegerField()
-    price = models.DecimalField(max_digits=12, decimal_places=2)
-    origin = models.CharField(max_length=2, choices=Origin.choices)
-    mileage_km = models.PositiveIntegerField()
-    fuel = models.CharField(max_length=50, blank=True)
-    transmission = models.CharField(max_length=50, blank=True)
-    body_type = models.CharField(max_length=50, blank=True)
-    engine_volume = models.CharField(max_length=50, blank=True)
-    description = models.TextField(blank=True)
+    # Основные поля
+    name = models.CharField(max_length=200, verbose_name="Название")
+    manufacturer = models.CharField(max_length=100, verbose_name="Производитель")
+    model = models.CharField(max_length=100, verbose_name="Модель")
+    year = models.PositiveIntegerField(verbose_name="Год выпуска")
+    price = models.DecimalField(max_digits=12, decimal_places=2, verbose_name="Цена")
+    origin = models.CharField(max_length=2, choices=Origin.choices, verbose_name="Страна")
+    
+    # Технические характеристики
+    mileage_km = models.PositiveIntegerField(verbose_name="Пробег (км)")
+    fuel = models.CharField(max_length=50, blank=True, verbose_name="Тип топлива")
+    drive = models.CharField(max_length=50, blank=True, verbose_name="Привод")  # Переименовано с transmission
+    body_type = models.CharField(max_length=50, blank=True, verbose_name="Тип кузова")
+    engine_volume = models.CharField(max_length=50, blank=True, verbose_name="Объём двигателя")
+    
+    # Дополнительные поля
+    availability = models.CharField(
+        max_length=20, 
+        choices=Availability.choices, 
+        default=Availability.ON_ORDER,
+        verbose_name="Наличие"
+    )
+    description = models.TextField(blank=True, verbose_name="Описание")
+    alt_name = models.SlugField(max_length=200, blank=True, verbose_name="URL-имя")
+    
+    # Метаданные
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
+    updated_at = models.DateTimeField(auto_now=True, verbose_name="Дата обновления")
+    is_active = models.BooleanField(default=True, verbose_name="Активно")
+    views_count = models.PositiveIntegerField(default=0, verbose_name="Просмотры")
 
     class Meta:
         ordering = ["-year", "manufacturer", "model"]
+        verbose_name = "Автомобиль"
+        verbose_name_plural = "Автомобили"
 
     def __str__(self) -> str:
         return f"{self.manufacturer} {self.model} {self.year}"

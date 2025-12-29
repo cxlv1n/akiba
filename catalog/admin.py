@@ -20,18 +20,18 @@ class CarImageInline(admin.TabularInline):
 
 @admin.register(Car)
 class CarAdmin(admin.ModelAdmin):
-    list_display = ("manufacturer", "model", "year", "origin", "price", "images_count")
-    list_filter = ("origin", "year", "fuel", "transmission")
-    search_fields = ("manufacturer", "model", "name")
+    list_display = ("manufacturer", "model", "year", "origin", "price", "availability", "is_active", "images_count")
+    list_filter = ("origin", "year", "fuel", "drive", "availability", "is_active", "body_type")
+    search_fields = ("manufacturer", "model", "name", "alt_name")
     inlines = [CarImageInline]
-    readonly_fields = ('image_preview',)
+    readonly_fields = ('image_preview', 'created_at', 'updated_at', 'views_count')
 
     fieldsets = (
         ('Основная информация', {
-            'fields': ('name', 'manufacturer', 'model', 'year', 'price', 'origin')
+            'fields': ('name', 'manufacturer', 'model', 'year', 'price', 'origin', 'alt_name')
         }),
         ('Характеристики', {
-            'fields': ('mileage_km', 'fuel', 'transmission', 'body_type', 'engine_volume'),
+            'fields': ('mileage_km', 'fuel', 'drive', 'body_type', 'engine_volume', 'availability'),
             'classes': ('collapse',)
         }),
         ('Изображения', {
@@ -41,6 +41,10 @@ class CarAdmin(admin.ModelAdmin):
         }),
         ('Описание', {
             'fields': ('description',),
+            'classes': ('collapse',)
+        }),
+        ('Метаданные', {
+            'fields': ('is_active', 'views_count', 'created_at', 'updated_at'),
             'classes': ('collapse',)
         }),
     )
